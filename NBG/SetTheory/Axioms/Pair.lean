@@ -36,7 +36,7 @@ theorem SingletonIntro (x : Class) [Set x]:
 theorem SingletonSingleton (x y : Class) [Set x] [Set y]:
   {x} ＝ {y} → x ＝ y:= by {
   intro h;
-  rw [AxiomExtensinality] at h;
+  rw [AxiomExtensionality] at h;
   have hx := h x;
   rw [SingletonIntro,SingletonIntro] at hx;
   rw [←hx];
@@ -46,7 +46,7 @@ theorem SingletonSingleton (x y : Class) [Set x] [Set y]:
 
 theorem PairSymm (x y: Class) [Set x] [Set y] :
   {x,y} ＝ {y,x} := by {
-    rw [AxiomExtensinality];
+    rw [AxiomExtensionality];
     intro z;
     rw [PairIntro, PairIntro];
     apply Iff.intro;

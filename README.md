@@ -1,1 +1,1 @@
-The lean4 library for Axiom NBG Theory.
+The lean4 library for NBG (von Neumann–Bernays–Gödel) Set Theory.

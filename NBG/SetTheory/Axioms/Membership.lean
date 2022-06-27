@@ -17,13 +17,18 @@ def Apply (F X: Class) : Class := sorry
 
 noncomputable def UnionAll (X : Class) :=
   Dom (E ∩ (U ✕ X))
+noncomputable instance : HasUnionAll Class where
+  UnionAll := UnionAll
+
 noncomputable def InterAll (X : Class) :=
   Diff U (Dom ((Diff U₂ E) ∩ (U ✕ X)))
+noncomputable instance : HasInterAll Class where
+  InterAll := InterAll
+
 noncomputable def PowerSet (X : Class) :=
   Diff U (Dom ((RelInv E) ∩ (U ✕ (Diff U X))))
-notation "⋃" X => UnionAll X
-notation "⋂" X => InterAll X
-notation "𝒫" X => PowerSet X
+noncomputable instance : HasPow Class where
+  Pow := PowerSet
 
 theorem UnivIsClosedPowerSet:
   U ＝ 𝒫 U := sorry

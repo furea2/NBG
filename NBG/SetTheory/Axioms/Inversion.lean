@@ -15,7 +15,7 @@ theorem RelIffRelInRelInv (R: Class) :
   case mp => {
     unfold isRelation;
     intro h;
-    apply (AxiomExtensinality R (RelInv (RelInv R))).2;
+    apply (AxiomExtensionality R (RelInv (RelInv R))).2;
     intro z;
     have ⟨x,y,h⟩ := h z;
     apply Iff.intro;

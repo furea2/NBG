@@ -11,7 +11,7 @@ noncomputable def U := choose AxiomUniverse
 theorem UniqueU :
   isUnique (fun U => ∀x: Class, (x∈U ↔ ∃X: Class,(x∈X))) := by {
   intro U U' hU hU';
-  apply (AxiomExtensinality U U').2;
+  apply (AxiomExtensionality U U').2;
   intro z;
   rw [hU, hU'];
   exact ⟨fun h => h,fun h => h⟩;

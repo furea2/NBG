@@ -6,16 +6,16 @@ open Classical
 -- 13. AxiomInfinity
 axiom AxiomInfinity :
   ∃x: Class, x∈U
-    → ((∅∈x) ∧ ∀n: Class, (n∈x → (n ∪ {n}) ∈ x))
+    → ((ø∈x) ∧ ∀n: Class, (n∈x → (n ∪ {n}) ∈ x))
 
-noncomputable def Zero : Class := ∅
+noncomputable def Zero : Class := ø
 noncomputable def One : Class := {Zero}
 noncomputable def Two : Class := {Zero, One}
 -- noncomputable def Three : Class := {Zero, One, Two}
 
 def isInfinitySet (x: Class) :=
   x∈U
-    → ((∅∈x) ∧ ∀n: Class, (n∈x → (n ∪ {n}) ∈ x))
+    → ((ø∈x) ∧ ∀n: Class, (n∈x → (n ∪ {n}) ∈ x))
 
 theorem IndClassExists:
   ∃Ind: Class, ∀x: Class,
@@ -25,7 +25,7 @@ noncomputable def Ind := choose IndClassExists
 
 noncomputable def Omega := ⋂ Ind
 notation "ω" => Omega
-notation "ℕ" => Diff Omega {∅}
+notation "ℕ" => Diff Omega {ø}
 
 def isFiniteSet (x: Class) :=
   ∃f: Class, Function f
