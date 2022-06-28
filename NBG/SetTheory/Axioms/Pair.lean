@@ -6,7 +6,7 @@ open Classical
 -- 4. AxiomPair
 axiom AxiomPair :
   ∀X Y: Class, ∃Z: Class,
-    ∀u: Class, (u∈Z ↔ (u ＝ X ∧ u ＝ Y))
+    (Z∈U) ∧ (∀u: Class, (u∈Z ↔ (u ＝ X ∧ u ＝ Y)))
 noncomputable def Pair (X Y: Class) := choose (AxiomPair X Y)
 noncomputable def Pair_def (X Y: Class) := choose_spec (AxiomPair X Y)
 notation "{"x"}" => Pair x x
@@ -16,7 +16,7 @@ notation "＜"x","y"＞" => OrdPair x y
 notation "＜"x","y","z"＞" => OrdPair (OrdPair x y) z
 
 theorem PairIntro (x y: Class) [Set x] [Set y] :
-  ∀u: Class, (u∈Pair x y ↔ (u ＝ x ∧ u ＝ y)) := Pair_def x y
+  ∀u: Class, (u∈Pair x y ↔ (u ＝ x ∧ u ＝ y)) := (Pair_def x y).2
 
 def isSingleton (X : Class) :=
   ∃x: Class, ∀u: Class, u∈X ↔ u＝x
@@ -42,7 +42,6 @@ theorem SingletonSingleton (x y : Class) [Set x] [Set y]:
   rw [←hx];
   exact ClassEqRefl x;
 }
-
 
 theorem PairSymm (x y: Class) [Set x] [Set y] :
   {x,y} ＝ {y,x} := by {

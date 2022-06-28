@@ -2,34 +2,38 @@
 universe u
 variable (α : Type u)
 
-class HasEq  (α : Type u) where
+class HasEq (α : Type u) where
   Eq : α → α → Prop
 infix:50 " ＝ "  => HasEq.Eq
 
-class HasMem  (α : Type u) where
+class HasMem (α : Type u) where
   Mem : α → α → Prop
 infix:50 " ∈ "  => HasMem.Mem
 
-class HasSubset  (α : Type u) where
+class HasSubset (α : Type u) where
   Subset : α → α → Prop
 infix:50 " ⊂ "  => HasSubset.Subset
 infix:50 " ⊆ "  => HasSubset.Subset
 
-class HasUnion  (α : Type u) where
+class HasUnion (α : Type u) where
   Union : α → α → α
 infix:50 " ∪ "  => HasUnion.Union
 
-class HasInter  (α : Type u) where
+class HasInter (α : Type u) where
   Inter : α → α → α
 infix:50 " ∩ "  => HasInter.Inter
 
-class HasUnionAll  (α : Type u) where
+class HasUnionAll (α : Type u) where
   UnionAll : α → α
-infix:50 " ⋃ "  => HasUnionAll.UnionAll
+notation " ⋃ "  => HasUnionAll.UnionAll
 
-class HasInterAll  (α : Type u) where
+class HasInterAll (α : Type u) where
   InterAll : α → α
-infix:50 " ⋂ "  => HasInterAll.InterAll
+notation " ⋂ "  => HasInterAll.InterAll
+
+class HasProduct (α : Type u) where
+  Product : α → α → α
+infix:50 " ✕ "  => HasProduct.Product
 
 class HasPow  (α : Sort u) where
   Pow : α → α

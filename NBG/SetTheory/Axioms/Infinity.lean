@@ -8,11 +8,6 @@ axiom AxiomInfinity :
   ∃x: Class, x∈U
     → ((ø∈x) ∧ ∀n: Class, (n∈x → (n ∪ {n}) ∈ x))
 
-noncomputable def Zero : Class := ø
-noncomputable def One : Class := {Zero}
-noncomputable def Two : Class := {Zero, One}
--- noncomputable def Three : Class := {Zero, One, Two}
-
 def isInfinitySet (x: Class) :=
   x∈U
     → ((ø∈x) ∧ ∀n: Class, (n∈x → (n ∪ {n}) ∈ x))
@@ -25,7 +20,8 @@ noncomputable def Ind := choose IndClassExists
 
 noncomputable def Omega := ⋂ Ind
 notation "ω" => Omega
-notation "ℕ" => Diff Omega {ø}
+notation "ℕ" => Omega
+notation "ℕ+" => Diff Omega {ø}
 
 def isFiniteSet (x: Class) :=
   ∃f: Class, Function f
@@ -35,4 +31,11 @@ class Finite where
   α : Class
   isFiniteSet : isFiniteSet α
 
+noncomputable def ClassOfNat (n : Nat) : Class :=
+  match n with
+    | 0     => ø
+    | n + 1 => (ClassOfNat n) ∪ {ClassOfNat n}
+
+noncomputable instance : OfNat Class n where
+  ofNat := ClassOfNat n
 

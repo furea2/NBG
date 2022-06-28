@@ -22,6 +22,7 @@ noncomputable instance : HasUnion Class where
   Union := Union
 noncomputable def EmptyClass : Class :=
   U ＼ U
+noncomputable def EmptyDef := choose_spec (AxiomDifferrence U U)
 notation " ø " => EmptyClass
 noncomputable def SymmDiff (X Y: Class) :=
   (X ∪ Y) ＼ (X ∩ Y)

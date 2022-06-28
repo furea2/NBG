@@ -18,6 +18,8 @@ def isSet (X : Class) : Prop := ∃(Y:Class), X ∈ Y
 class Set (X : Class) where
   isSet : ∃(Y:Class), X ∈ Y
 
+theorem SetIsSet {x : Class} : Set x → isSet x := fun ⟨Y, h⟩ => ⟨Y, h⟩
+
 def isProper (X : Class) : Prop := ¬ (isSet X)
 class ProperClass (X : Class) where
   isProper : isProper X

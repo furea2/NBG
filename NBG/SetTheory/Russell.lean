@@ -1,25 +1,13 @@
 import NBG.SetTheory.Defs
-import NBG.SetTheory.Axioms.Universe
+import NBG.SetTheory.Axioms.Basic
 
 open Classical
 
-def isNotSelfIncluided (X : Class) : Prop :=
-  ∃(Y:Class), ((X ∈ Y) ∧ (X ∉ X))
-class NotSelfIncluided (X : Class) where
-  isSelfIncluided : isNotSelfIncluided X
-
-def NotSelfIncluidedIsInUniv (x : Class):
-  isNotSelfIncluided x → isSet x := fun ⟨Y, h⟩ => ⟨Y, h.1⟩
-
-theorem RusselClassExists:
-  ∃A: Class, ∀x: Class,
-    (x∈A) ↔ (isNotSelfIncluided x) := sorry
-
-noncomputable def R := choose RusselClassExists
+def isNotSelfIncluided (X : Class) : Prop := (X ∉ X)
 
 theorem Russel':
   (∃A : Class, ∀x : Class,
-    (x ∈ A) ↔ (x ∉ x)) → False:= by {
+    (x ∈ A) ↔ (isNotSelfIncluided x)) → False:= by {
   intro ⟨A, h⟩;
   have := h A;
   by_cases hA : A∈A;
@@ -27,14 +15,55 @@ theorem Russel':
   {have := this.2 hA; contradiction}
 }
 
-theorem imp_symm {p q: Prop} : (p → q) → (¬ q → ¬ p) := sorry
-theorem not_and_or {p q: Prop} : ¬(p ∧ q) → (¬ q ∨ ¬ p) := sorry
+theorem Russel (R : Class):
+  (∀x: Class,
+    (x∈R) ↔ ((isSet x) ∧ (isNotSelfIncluided x)))
+    → (isProper R) := by {
+  intro R_def;
+  have hR := R_def R;
+  by_cases h1 : R ∈ R;
+  {
+    apply False.elim _;
+    have : R ∉ R := (hR.1 h1).2;
+    contradiction;
+  }
+  {
+    by_cases h2 : isSet R;
+    {
+      apply False.elim _;
+      have : R ∈ R := (hR.2 ⟨h2,h1⟩);
+      contradiction;
+    }
+    {exact h2;}
+  }
+}
 
 theorem UnivIsProper:
   isProper U := by {
-  intro ⟨Y, hY⟩;
+  intro h;
+  have ⟨Y, hY⟩ := h;
   have hUU := AllSetInU ⟨Y, hY⟩;
-  have R_def := choose_spec RusselClassExists;
-  sorry;
+  let U' := {U};
+  have U'_def := @SingletonIntro U ⟨Y, hY⟩;
+  have hU' := (U'_def U).2 (ClassEqRefl U);
+  by_cases hE : U'＝ø;
+  {
+    rw [AxiomExtensionality] at hE;
+    rw [hE] at hU';
+    have := (EmptyDef U).1 hU';
+    exact this.2 this.1;
+  }
+  {
+    have U_def := choose_spec AxiomUniverse;
+    have ⟨B', hB'⟩ := (U_def U').1 (Pair_def U U).1;
+    have ⟨B, ⟨hB1, hB2⟩⟩ := AxiomFoundation U' (AllSetInU ⟨B', hB'⟩) hE;
+    rw [U'_def, AxiomExtensionality] at hB1;
+    have : ∀z: Class, z∈ U → ¬ z ∈ U' := by {
+      intro z hz;
+      rw [←hB1] at hz;
+      exact (hB2 z) hz;
+    }
+    exact (this U hUU) hU';
+  }
 }
 

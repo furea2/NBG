@@ -6,4 +6,4 @@ open Classical
 -- 14. AxiomFoundation
 axiom AxiomFoundation :
   ∀x: Class, x∈U
-    → ¬ x＝ø → (∃y: Class, y∈x → (∀z: Class, z∈y → z∉x))
+    → ¬ x＝ø → (∃y: Class, y∈x ∧ (∀z: Class, z∈y → z∉x))
