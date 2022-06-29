@@ -6,11 +6,13 @@ open Classical
 -- 8. AxiomMembership
 axiom AxiomMembership :
   ∃E: Class, ∀x y: Class,
-    x∈U → y∈U → (＜x,y＞∈E ↔ x∈y)
+    (hx: x∈U) → (hy: y∈U) → ((OrdPair' x y hx hy)∈E ↔ x∈y)
 noncomputable def E := choose AxiomMembership
 -- theorem DomEEqUniv : (Dom E) ＝ U := sorry
 def isFunction (F : Class) [Relation F] : Prop :=
-  ∀x x' y y': Class, ＜x,y＞∈F → ＜x',y'＞∈F → x＝x' ∧ y＝y'
+  ∀x x' y y': Class,
+    (hx: x∈U) → (hx': x'∈U) → (hy: y∈U) → (hy': y'∈U)
+      → (OrdPair' x y hx hy)∈F → (OrdPair' x' y' hx' hy')∈F → x＝x' ∧ y＝y'
 class Function (F : Class) extends Relation F where
   isFunction : isFunction F
 def Apply (F X: Class) : Class := sorry

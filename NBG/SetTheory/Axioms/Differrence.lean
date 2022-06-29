@@ -55,7 +55,7 @@ theorem EmptyHasNoClass : ∀(X : Class), ¬(X ∈ ø) := by {
   intro X h;
   have emp_def := choose_spec (AxiomDifferrence U U);
   have hXU: ¬ X ∈ U := ((emp_def X).1 h).right;
-  have hXU2 := AllSetInU ⟨ø, h⟩;
+  have hXU2 := AllSetInU.1 ⟨ø, h⟩;
   contradiction;
 }
 

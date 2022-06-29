@@ -6,7 +6,7 @@ open Classical
 -- 6. AxiomInversion
 axiom AxiomInversion :
   ∀X: Class, ∃Y: Class,
-    ∀x y: Class, x∈U → y∈U → (＜x,y＞∈X ↔ ＜y,x＞∈Y)
+    ∀x y: Class, (hx: x∈U) → (hy: y∈U) → ((OrdPair' x y hx hy)∈X ↔ (OrdPair' y x hy hx)∈Y)
 noncomputable def RelInv (R: Class) := choose (AxiomInversion R)
 
 theorem RelIffRelInRelInv (R: Class) :
@@ -17,7 +17,7 @@ theorem RelIffRelInRelInv (R: Class) :
     intro h;
     apply (AxiomExtensionality R (RelInv (RelInv R))).2;
     intro z;
-    have ⟨x,y,h⟩ := h z;
+    have h := h z;
     apply Iff.intro;
     case mp => {
       intro hz;
