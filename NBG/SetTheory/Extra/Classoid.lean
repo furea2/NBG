@@ -2,7 +2,7 @@ import NBG.SetTheory.Axioms.Extensionality
 
 -- Classoid
 private theorem ClassEqIsEquivalence : @Equivalence Class Class.Eq :=
-  { refl := ClassEqRefl, symm := ClassEqSymm, trans := ClassEqTrans }
+  { refl := ClassEq.refl, symm := ClassEq.symm, trans := ClassEq.trans }
 
 instance Classoid : Setoid Class where
   r     := Class.Eq
@@ -19,5 +19,5 @@ theorem Classoid.refl : ∀(X : Class'), X=X := by {
   apply Quot.inductionOn (motive := fun X => X=X);
   intro X;
   apply Classoid.sound;
-  exact ClassEqRefl X;
+  exact ClassEq.refl X;
 }

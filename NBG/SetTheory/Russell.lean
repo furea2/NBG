@@ -42,10 +42,10 @@ theorem UnivIsProper:
   isProper U := by {
   intro h;
   have ⟨Y, hY⟩ := h;
-  have hUU := AllSetInU ⟨Y, hY⟩;
-  let U' := {U};
-  have U'_def := @SingletonIntro U ⟨Y, hY⟩;
-  have hU' := (U'_def U).2 (ClassEqRefl U);
+  have hUU := AllSetInU.1 ⟨Y, hY⟩;
+  let U' := @Singleton U ⟨⟨Y, hY⟩, hUU⟩;
+  have U'_def := @SingletonIntro U ⟨⟨Y, hY⟩, hUU⟩;
+  have hU' := (U'_def U).2 (ClassEq.refl U);
   by_cases hE : U'＝ø;
   {
     rw [AxiomExtensionality] at hE;
@@ -55,8 +55,8 @@ theorem UnivIsProper:
   }
   {
     have U_def := choose_spec AxiomUniverse;
-    have ⟨B', hB'⟩ := (U_def U').1 (Pair_def U U).1;
-    have ⟨B, ⟨hB1, hB2⟩⟩ := AxiomFoundation U' (AllSetInU ⟨B', hB'⟩) hE;
+    have ⟨B', hB'⟩ := (U_def U').1 (@Singleton_def U ⟨⟨Y, hY⟩, hUU⟩).1;
+    have ⟨B, ⟨hB1, hB2⟩⟩ := AxiomFoundation U' (AllSetInU.1 ⟨B', hB'⟩) hE;
     rw [U'_def, AxiomExtensionality] at hB1;
     have : ∀z: Class, z∈ U → ¬ z ∈ U' := by {
       intro z hz;

@@ -5,30 +5,30 @@ import NBG.SetTheory.Defs
 axiom AxiomExtensionality :
   ∀X Y: Class, (X＝Y ↔ ∀z, (z ∈ X ↔ z ∈ Y))
 
-def Subset (X Y : Class) : Prop :=
+def ClassSubset (X Y : Class) : Prop :=
   ∀z:Class, z ∈ X → z ∈ Y
 instance : HasSubset Class where
-  Subset := Subset
-notation:50 X " ⊊ " Y => (Subset X Y) ∧ ¬ (X＝Y)
-notation:50 X " ⊄ " Y => ¬ Subset X Y
-notation:50 X " ⊈ " Y => ¬ Subset X Y
+  Subset := ClassSubset
+notation:50 X " ⊊ " Y => (ClassSubset X Y) ∧ ¬ (X＝Y)
+notation:50 X " ⊄ " Y => ¬ ClassSubset X Y
+notation:50 X " ⊈ " Y => ¬ ClassSubset X Y
 
 -- class equality
-theorem ClassEqRefl (X : Class):
+theorem ClassEq.refl (X : Class):
   X＝X := by {
   rw [AxiomExtensionality];
   intro z;
   exact ⟨fun h => h,fun h => h⟩;
 }
 
-theorem ClassEqSymm {X Y : Class}:
+theorem ClassEq.symm {X Y : Class}:
   X＝Y → Y＝X := by {
   rw [AxiomExtensionality, AxiomExtensionality];
   intro h;
   exact fun z => (h z).symm;
 }
 
-theorem ClassEqTrans {X Y Z : Class}:
+theorem ClassEq.trans {X Y Z : Class}:
   X＝Y → Y＝Z → X＝Z := by {
   rw [AxiomExtensionality,
       AxiomExtensionality,
@@ -40,7 +40,7 @@ theorem ClassEqTrans {X Y Z : Class}:
 
 
 -- class subset
-theorem ClassSubsetRefl (X : Class):
+theorem ClassSubset.refl (X : Class):
   X⊂X := fun _ => (fun h => h)
 
 theorem ClassSubsetSymmImplyEq {X Y : Class}:
@@ -49,15 +49,15 @@ theorem ClassSubsetSymmImplyEq {X Y : Class}:
   exact fun h1 h2 z => ⟨h1 z,h2 z⟩;
 }
 
-theorem ClassSubsetTrans {X Y Z : Class}:
+theorem ClassSubset.trans {X Y Z : Class}:
   X⊂Y → Y⊂Z → X⊂Z :=
 fun h1 h2 z h => h2 z (h1 z h)
 
 instance : LE Class where
-  le := Subset
+  le := ClassSubset
 
 example {X Y : Class} : X ≤ Y → Y ≤ Z → X ≤ Z :=
-ClassSubsetTrans
+ClassSubset.trans
 
 theorem EqIffSubsetMutually (X Y : Class):
   X＝Y ↔ (X ⊂ Y ∧ Y ⊂ X) := by {
