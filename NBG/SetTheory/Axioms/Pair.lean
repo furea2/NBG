@@ -47,6 +47,10 @@ noncomputable def Singleton (x: Class) [Set x] : Class :=
   choose (SingletonExists x)
 noncomputable def Singleton_def (x: Class) [Set x] :=
   choose_spec (SingletonExists x)
+noncomputable def Singleton' (X: Class) (hx: X ∈ U) :=
+  choose (@SingletonExists X ⟨AllSetInU.2 hx,hx⟩)
+noncomputable def Singleton_def' (X: Class) (hx: X ∈ U) :=
+  choose_spec (@SingletonExists X ⟨AllSetInU.2 hx,hx⟩)
 noncomputable def SingletonSet_def (x: Class) [Set x] :=
   (Singleton_def x)
 noncomputable def SingletonSet (x: Class) [Set x] : Set (Singleton x) := {
@@ -64,15 +68,22 @@ noncomputable def OrdPair (X Y: Class) [hx: Set X] [hy: Set Y] : Class :=
 noncomputable def OrdPair_def (X Y: Class) [hx: Set X] [hy: Set Y] :=
 @Pair_def {X}c {X, Y}c (SingletonSet X) (PairSet hx hy)
 noncomputable def OrdPair' (X Y: Class) (hx: X ∈ U) (hy: Y ∈ U) : Class :=
-Pair' (Pair' X X hx hx) (Pair' X Y hx hy) (Pair_def' X X hx hx).1 (Pair_def' X Y hx hy).1
+Pair' (Singleton' X hx) (Pair' X Y hx hy) (Singleton_def' X hx).1 (Pair_def' X Y hx hy).1
 noncomputable def OrdPair_def' (X Y: Class) (hx: X ∈ U) (hy: Y ∈ U) :=
 Pair_def' (Pair' X X hx hx) (Pair' X Y hx hy) (Pair_def' X X hx hx).1 (Pair_def' X Y hx hy).1
-noncomputable def OrdPairSet (x: Set X) (y: Set Y) := {{x}s, {x, y}s}s
+noncomputable def OrdPairSet (x: Set X) (y: Set Y) : Set (OrdPair X Y) := sorry
+-- {{x}s, {x, y}s}s
 notation "＜"x","y"＞c" => OrdPair x y
-notation "＜"x","y","z"＞c" => OrdPair (OrdPair x y) z
 notation "＜"x","y"＞s" => OrdPairSet x y
-notation "＜"x","y","z"＞s" => OrdPairSet (OrdPairSet x y) z
 
+
+noncomputable def OrdTriple (X Y Z: Class) [hx: Set X] [hy: Set Y] [hz: Set Z] : Class :=
+@OrdPair ＜X, Y＞c Z (OrdPairSet hx hy) hz
+noncomputable def OrdTriple_def (X Y Z: Class) [hx: Set X] [hy: Set Y] [hz: Set Z] :=
+@OrdPair_def ＜X, Y＞c Z (OrdPairSet hx hy) hz
+noncomputable def OrdTripleSet (x: Set X) (y: Set Y) (z: Set Z) := ＜＜x, y＞s, z＞s
+notation "＜"x","y","z"＞c" => OrdTriple x y z
+notation "＜"x","y","z"＞s" => OrdTripleSet x y z
 
 -- singleton
 def isSingleton (X : Class) :=
@@ -334,3 +345,16 @@ theorem OrdPairEq {x y u v: Class} [Set x] [Set y] [Set u] [Set v]:
   {exact fun h => OrdPairEq₁ h.1 h.2;}
 }
 
+theorem OrdTripleEq {x y z u v w: Class} [hx:Set x] [hy:Set y] [hz:Set z] [hu:Set u] [hv:Set v] [hw:Set w]:
+  (＜x,y,z＞c ＝ ＜u,v,w＞c) ↔ (x ＝ u ∧ y ＝ v ∧ z ＝ w) := by {
+  unfold OrdTriple;
+  have hxy := OrdPairSet hx hy;
+  have huv := OrdPairSet hu hv;
+  have h1 := @OrdPairEq ＜x,y＞c z ＜u,v＞c w hxy hz huv hw;
+  have h2 := @OrdPairEq x y u v hx hy hu hv;
+  apply Iff.trans h1;
+  rw [h2];
+  apply Iff.intro;
+  {exact fun h => ⟨h.1.1,⟨h.1.2,h.2⟩⟩;}
+  {exact fun h => ⟨⟨h.1,h.2.1⟩,h.2.2⟩}
+}
