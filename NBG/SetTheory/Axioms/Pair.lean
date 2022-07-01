@@ -8,107 +8,81 @@ axiom AxiomPair :
   ∀x y: Class, x ∈ U → y ∈ U
     → ∃Z: Class,
       (Z∈U) ∧ (∀u: Class, (u∈Z ↔ (u ＝ x ∨ u ＝ y)))
-noncomputable def Pair (X Y: Class) [hx: Set X] [hy: Set Y] : Class :=
-  choose (AxiomPair X Y hx.2 hy.2)
-noncomputable def Pair_def (X Y: Class) [hx: Set X] [hy: Set Y] :=
-  choose_spec (AxiomPair X Y hx.2 hy.2)
-noncomputable def Pair' (X Y: Class) (hx: X ∈ U) (hy: Y∈ U) : Class :=
-  choose (AxiomPair X Y hx hy)
-noncomputable def Pair_def' (X Y: Class) (hx: X ∈ U) (hy: Y∈ U) :=
-  choose_spec (AxiomPair X Y hx hy)
-noncomputable def PairSet_def (_: Set X) (_: Set Y) :=
-  (Pair_def X Y)
-noncomputable def PairSet (x: Set X) (y: Set Y) : Set (Pair X Y) := {
-  isSet := AllSetInU.2 (PairSet_def x y).1,
-  inU   := (PairSet_def x y).1
-}
-theorem SingletonExists (x: Class) [hx: Set x]:
-  ∃z: Class,
-    ((z∈U) ∧ (∀u: Class, (u∈z ↔ (u ＝ x)) )) := by {
-  exists (Pair x x);
-  have ⟨h1, h2⟩ := Pair_def x x;
-  apply And.intro;
-  {exact h1;}
-  {
-    intro z;
-    apply Iff.intro;
-    {
-      intro h;
-      have := ((h2 z).1 h);
-      cases this;
-      case right.mp.inl h => exact h;
-      case right.mp.inr h => exact h;
-    }
-    {exact fun h => ((h2 z).2) (Or.inl h);}
-  }
-}
+-- noncomputable def Pair (X Y: Class) [hx: Set X] [hy: Set Y] : Class :=
+--   (choose (AxiomPair X Y hx.2 hy.2))
+noncomputable def Pair (x y: SetType) : Class :=
+  (SetType.mk₂ ((choose (AxiomPair x.1 y.1 x.2.2 y.2.2))) ((choose_spec (AxiomPair x.1 y.1 x.2.2 y.2.2))).1).1
+noncomputable def Pair_def (x y: SetType) :=
+  choose_spec (AxiomPair x.1 y.1 x.2.2 y.2.2)
+noncomputable def PairSet (x y: SetType) : SetType :=
+  (SetType.mk₂ ((choose (AxiomPair x.1 y.1 x.2.2 y.2.2))) ((choose_spec (AxiomPair x.1 y.1 x.2.2 y.2.2))).1)
 
-noncomputable def Singleton (x: Class) [Set x] : Class :=
-  choose (SingletonExists x)
-noncomputable def Singleton_def (x: Class) [Set x] :=
-  choose_spec (SingletonExists x)
-noncomputable def Singleton' (X: Class) (hx: X ∈ U) :=
-  choose (@SingletonExists X ⟨AllSetInU.2 hx,hx⟩)
-noncomputable def Singleton_def' (X: Class) (hx: X ∈ U) :=
-  choose_spec (@SingletonExists X ⟨AllSetInU.2 hx,hx⟩)
-noncomputable def SingletonSet_def (x: Class) [Set x] :=
-  (Singleton_def x)
-noncomputable def SingletonSet (x: Class) [Set x] : Set (Singleton x) := {
-  isSet := AllSetInU.2 (Singleton_def x).1,
-  inU   := (Singleton_def x).1,
+-- singleton def
+theorem SingletonSetExists (x: SetType):
+  ∃z: SetType,
+    (∀u: Class, (u∈z.1 ↔ (u ＝ x.1)) ) := by {
+  exists (PairSet x x);
+  intro u;
+  have h := (Pair_def x x).2 u;
+  apply Iff.trans h;
+  apply Iff.intro;
+  {
+    intro h;
+    cases h;
+    case mp.inl h => exact h;
+    case mp.inr h => exact h;
+  }
+  {exact fun h => (Or.inl h);}
 }
+noncomputable def Singleton (x: SetType) : Class :=
+  (choose (SingletonSetExists x)).1
+noncomputable def Singleton_def (x: SetType) :=
+  choose_spec (SingletonSetExists x)
+noncomputable def SingletonSet (x: SetType) : SetType :=
+  choose (SingletonSetExists x)
 
 notation "{"x"}c" => Singleton x
 notation "{"x","y"}c" => Pair x y
--- notation "{"x"}s" => SingletonSet x
-notation "{"x"}s" => PairSet x x
+notation "{"x"}s" => SingletonSet x
 notation "{"x","y"}s" => PairSet x y
-noncomputable def OrdPair (X Y: Class) [hx: Set X] [hy: Set Y] : Class :=
-@Pair {X}c {X, Y}c (SingletonSet X) (PairSet hx hy)
-noncomputable def OrdPair_def (X Y: Class) [hx: Set X] [hy: Set Y] :=
-@Pair_def {X}c {X, Y}c (SingletonSet X) (PairSet hx hy)
-noncomputable def OrdPair' (X Y: Class) (hx: X ∈ U) (hy: Y ∈ U) : Class :=
-Pair' (Singleton' X hx) (Pair' X Y hx hy) (Singleton_def' X hx).1 (Pair_def' X Y hx hy).1
-noncomputable def OrdPair_def' (X Y: Class) (hx: X ∈ U) (hy: Y ∈ U) :=
-Pair_def' (Pair' X X hx hx) (Pair' X Y hx hy) (Pair_def' X X hx hx).1 (Pair_def' X Y hx hy).1
-noncomputable def OrdPairSet (x: Set X) (y: Set Y) : Set (OrdPair X Y) := sorry
--- {{x}s, {x, y}s}s
-notation "＜"x","y"＞c" => OrdPair x y
-notation "＜"x","y"＞s" => OrdPairSet x y
 
 
-noncomputable def OrdTriple (X Y Z: Class) [hx: Set X] [hy: Set Y] [hz: Set Z] : Class :=
-@OrdPair ＜X, Y＞c Z (OrdPairSet hx hy) hz
-noncomputable def OrdTriple_def (X Y Z: Class) [hx: Set X] [hy: Set Y] [hz: Set Z] :=
-@OrdPair_def ＜X, Y＞c Z (OrdPairSet hx hy) hz
-noncomputable def OrdTripleSet (x: Set X) (y: Set Y) (z: Set Z) := ＜＜x, y＞s, z＞s
-notation "＜"x","y","z"＞c" => OrdTriple x y z
-notation "＜"x","y","z"＞s" => OrdTripleSet x y z
+-- ordered pair
+-- noncomputable def OrdPair (x y: SetType) : Class := @Pair x y
+noncomputable def OrdPair_def (x y: SetType) := @Pair_def x y
+-- noncomputable def OrdPairSet (x: SetType) (y: SetType) : SetType :=
+--   (@PairSet {x}s {x, y}s)
+notation "＜"x","y"＞c" => { {x}s , {x, y}s }c
+notation "＜"x","y"＞s" => { {x}s , {x, y}s }s
+
+-- ordered triple
+notation "＜"x","y","z"＞c" => ＜＜x, y＞s, z＞s.1
+notation "＜"x","y","z"＞s" => ＜＜x, y＞s, z＞s
 
 -- singleton
 def isSingleton (X : Class) :=
   ∃x: Class, ∀u: Class, u∈X ↔ u＝x
 
-theorem SingletonIntro (x : Class) [Set x]:
-  ∀u: Class, u∈{x}c ↔ u＝x := fun u => (Singleton_def x).2 u
+theorem SingletonIntro (x : SetType):
+  ∀u: Class, u∈{x}c ↔ u＝x.1 := fun u => (Singleton_def x) u
 
-theorem SingletonSingleton {x y : Class} [Set x] [Set y]:
-  {x}c ＝ {y}c ↔ x ＝ y:= by {
+theorem SingletonSingleton {x y : SetType}:
+  {x}c ＝ {y}c ↔ x.1 ＝ y.1:= by {
   apply Iff.intro;
   {
     intro h;
     rw [AxiomExtensionality] at h;
-    have hx := h x;
+    have hx := h x.1;
     rw [SingletonIntro,SingletonIntro] at hx;
     rw [←hx];
-    exact ClassEq.refl x;
+    exact ClassEq.refl x.1;
   }
   {
     intro h;
     rw [AxiomExtensionality];
     intro z;
-    apply Iff.trans ((Singleton_def x).2 z);
-    apply Iff.trans _ ((Singleton_def y).2 z).symm;
+    apply Iff.trans ((Singleton_def x) z);
+    apply Iff.trans _ ((Singleton_def y) z).symm;
     apply Iff.intro;
     {exact fun h' => ClassEq.trans h' h;}
     {exact fun h' => ClassEq.trans h' (ClassEq.symm h);}
@@ -116,10 +90,10 @@ theorem SingletonSingleton {x y : Class} [Set x] [Set y]:
 }
 
 -- pair
-theorem PairIntro (x y: Class) [Set x] [Set y] :
-  ∀u: Class, (u∈{x, y}c ↔ (u ＝ x ∨ u ＝ y)) := (Pair_def x y).2
+theorem PairIntro (x y: SetType):
+  ∀u: Class, (u∈{x, y}c ↔ (u ＝ x.1 ∨ u ＝ y.1)) := (Pair_def x y).2
 
-theorem PairSymm {x y: Class} [Set x] [Set y] :
+theorem PairSymm {x y: SetType}:
   {x, y}c ＝ {y, x}c := by {
     rw [AxiomExtensionality];
     intro z;
@@ -139,7 +113,7 @@ theorem PairSymm {x y: Class} [Set x] [Set y] :
     }
 }
 
-theorem SingletonEqSelfPair {x: Class} [Set x]:
+theorem SingletonEqSelfPair {x: SetType}:
   {x}c ＝ {x, x}c := by {
   rw [AxiomExtensionality];
   intro z;
@@ -154,19 +128,18 @@ theorem SingletonEqSelfPair {x: Class} [Set x]:
   }
 }
 
-theorem SingletonPair {x y z : Class} [Set x] [Set y] [Set z]:
+theorem SingletonPair {x y z : SetType}:
   {x}c ＝ {y, z}c ↔ x ＝ y ∧ x ＝ z:= by {
   apply Iff.intro;
   {
-    rw [];
     intro h;
     rw [AxiomExtensionality] at h;
-    have hy := h y;
+    have hy := h y.1;
     rw [SingletonIntro,PairIntro] at hy;
-    have hy := ClassEq.symm (hy.2 (Or.inl (ClassEq.refl y)));
-    have hz := h z;
+    have hy := ClassEq.symm (hy.2 (Or.inl (ClassEq.refl y.1)));
+    have hz := h z.1;
     rw [SingletonIntro,PairIntro] at hz;
-    have hz := ClassEq.symm (hz.2 (Or.inr (ClassEq.refl z)));
+    have hz := ClassEq.symm (hz.2 (Or.inr (ClassEq.refl z.1)));
     exact ⟨hy,hz⟩;
   }
   {
@@ -186,12 +159,13 @@ theorem SingletonPair {x y z : Class} [Set x] [Set y] [Set z]:
 }
 
 
--- ordered pair
-theorem OrdPairIntro (x y: Class) [Set x] [Set y] :
-  ∀u: Class, (u∈＜x, y＞c ↔ (u ＝ {x}c ∨ u ＝ {x,y}c)) := (OrdPair_def x y).2
+-- -- ordered pair
+theorem OrdPairIntro (x y: SetType):
+  ∀u: Class, (u∈＜x, y＞c ↔ (u ＝ {x}c ∨ u ＝ {x,y}c)) :=
+  fun u => (PairIntro {x}s {x,y}s) u
 
-theorem OrdPairEq₁ {x y u v: Class} [Set x] [Set y] [Set u] [Set v]:
-  (x ＝ u) →  (y ＝ v) → (＜x,y＞c ＝ ＜u,v＞c) := by {
+theorem OrdPairEq₁ {x y u v: SetType}:
+  (x.1 ＝ u.1) →  (y.1 ＝ v.1) → (＜x,y＞c ＝ ＜u,v＞c) := by {
   intro h1 h2;
   rw [AxiomExtensionality];
   intro z;
@@ -255,7 +229,7 @@ theorem OrdPairEq₁ {x y u v: Class} [Set x] [Set y] [Set u] [Set v]:
   }
 }
 
-theorem OrdPairEq₂ {x y : Class} [Set x] [Set y]:
+theorem OrdPairEq₂ {x y : SetType}:
   x ＝ y → (∀(z: Class), (z ＝ {x}c ∨ z ＝ {x, y}c) ↔ (z ＝ {x}c)) := by {
   intro h z;
   apply Iff.intro;
@@ -281,8 +255,8 @@ theorem OrdPairEq₂ {x y : Class} [Set x] [Set y]:
   {exact fun hz => Or.inl hz;}
 }
 
-theorem OrdPairEq {x y u v: Class} [Set x] [Set y] [Set u] [Set v]:
-  (＜x,y＞c ＝ ＜u,v＞c) ↔ (x ＝ u ∧ y ＝ v) := by {
+theorem OrdPairEq {x y u v: SetType}:
+  (＜x,y＞c ＝ ＜u,v＞c) ↔ (x.1 ＝ u.1 ∧ y.1 ＝ v.1) := by {
   apply Iff.intro;
   {
     intro h;
@@ -314,9 +288,9 @@ theorem OrdPairEq {x y u v: Class} [Set x] [Set y] [Set u] [Set v]:
           }
           case inr.inr h' => {
             rw [AxiomExtensionality] at h';
-            have hy := h' y;
+            have hy := h' y.1;
             rw [PairIntro,PairIntro] at hy;
-            have hy := hy.1 (Or.inr (ClassEq.refl y));
+            have hy := hy.1 (Or.inr (ClassEq.refl y.1));
             cases hy;
             case inl hy => {
               have hxy' := ClassEq.trans hxu (ClassEq.symm hy);
@@ -345,16 +319,17 @@ theorem OrdPairEq {x y u v: Class} [Set x] [Set y] [Set u] [Set v]:
   {exact fun h => OrdPairEq₁ h.1 h.2;}
 }
 
-theorem OrdTripleEq {x y z u v w: Class} [hx:Set x] [hy:Set y] [hz:Set z] [hu:Set u] [hv:Set v] [hw:Set w]:
-  (＜x,y,z＞c ＝ ＜u,v,w＞c) ↔ (x ＝ u ∧ y ＝ v ∧ z ＝ w) := by {
-  unfold OrdTriple;
-  have hxy := OrdPairSet hx hy;
-  have huv := OrdPairSet hu hv;
-  have h1 := @OrdPairEq ＜x,y＞c z ＜u,v＞c w hxy hz huv hw;
-  have h2 := @OrdPairEq x y u v hx hy hu hv;
+theorem OrdTripleSetEq {x y z u v w: SetType}:
+  (＜x,y,z＞s.1 ＝ ＜u,v,w＞s.1) ↔ (x.1 ＝ u.1 ∧ y.1 ＝ v.1 ∧ z.1 ＝ w.1) := by {
+  -- unfold OrdTriple;
+  have hxy := ＜x, y＞s;
+  have huv := ＜u, v＞s;
+  have h1 := @OrdPairEq ＜x, y＞s z ＜u,v＞s w;
+  -- have h2 := @OrdPairEq x y u v;
   apply Iff.trans h1;
-  rw [h2];
-  apply Iff.intro;
-  {exact fun h => ⟨h.1.1,⟨h.1.2,h.2⟩⟩;}
-  {exact fun h => ⟨⟨h.1,h.2.1⟩,h.2.2⟩}
+  -- rw [h2];
+  -- apply Iff.intro;
+  -- {exact fun h => ⟨h.1.1,⟨h.1.2,h.2⟩⟩;}
+  -- {exact fun h => ⟨⟨h.1,h.2.1⟩,h.2.2⟩}
+  sorry;
 }

@@ -4,21 +4,20 @@ notation "ℕ" => ω
 notation "ℕ+" => Diff ω {ø}c
 
 -- natural number
-noncomputable def ClassSucc (x: Class) [Set x] : Class := x ∪ {x}c
-theorem ClassSuccInU (x: Class) [Set x] : (ClassSucc x) ∈ U := by {
+noncomputable def ClassSuccSet (x: SetType) : Class := x.1 ∪ {x}c
+noncomputable def ClassSuccIsSet (x: SetType) : Set (ClassSuccSet x) := by {
   sorry;
-  -- x ∪ {x}c
 }
-noncomputable def ClassSucc' (x: Class) [Set x] : Set (ClassSucc x) := {
-  isSet := AllSetInU.2 (ClassSuccInU x),
-  inU   := ClassSuccInU x
-}
+noncomputable def ClassSucc (x: SetType) : SetType where
+  X := ClassSuccSet x
+  x := ClassSuccIsSet x
 
--- noncomputable def ClassOfNat (n : Nat): Class :=
---   match n with
---     | 0     => ø
---     | n + 1  => @ClassSucc (ClassOfNat n)
+noncomputable def ClassSetTypeOfNat (n : Nat) : SetType :=
+  match n with
+    | 0     => ø_set
+    | n + 1  => ClassSucc (ClassSetTypeOfNat n)
+noncomputable def ClassSetOfNat (n : Nat) : Class := (ClassSetTypeOfNat n).1
 
--- noncomputable instance : OfNat Class n where
---   ofNat := ClassOfNat n
+noncomputable instance : OfNat Class n where
+  ofNat := ClassSetOfNat n
 

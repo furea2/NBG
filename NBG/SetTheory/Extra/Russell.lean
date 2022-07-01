@@ -41,12 +41,10 @@ theorem Russel (R : Class):
 theorem UnivIsProper:
   isProper U := by {
   intro h;
-  have ⟨Y, hY⟩ := h;
-  have hUU := AllSetInU.1 ⟨Y, hY⟩;
-  let U' := @Singleton U ⟨⟨Y, hY⟩, hUU⟩;
-  have U'_def := @SingletonIntro U ⟨⟨Y, hY⟩, hUU⟩;
-  have hU' := (U'_def U).2 (ClassEq.refl U);
-  by_cases hE : U'＝ø;
+  let U_set : SetType := SetType.mk₁ U h;
+  have U'_def : ∀u: Class, u ∈ {U_set}c ↔ u ＝ U := (Singleton_def U_set);
+  have hU' : U ∈ {U_set}c := (U'_def U).2 (ClassEq.refl U);
+  by_cases hE : {U_set}c ＝ ø;
   {
     rw [AxiomExtensionality] at hE;
     rw [hE] at hU';
@@ -54,12 +52,12 @@ theorem UnivIsProper:
     exact this.2 this.1;
   }
   {
-    have U_def := choose_spec AxiomUniverse;
-    have ⟨B', hB'⟩ := (U_def U').1 (@Singleton_def U ⟨⟨Y, hY⟩, hUU⟩).1;
-    have ⟨B, ⟨hB1, hB2⟩⟩ := AxiomFoundation U' (AllSetInU.1 ⟨B', hB'⟩) hE;
-    rw [U'_def, AxiomExtensionality] at hB1;
-    have : ∀z: Class, z∈ U → ¬ z ∈ U' := by {
+    have hUU := AllSetInU.1 h;
+    have : ∀z: Class, z∈ U → ¬ z ∈ {U_set}c := by {
       intro z hz;
+      have U'_in_U : {U_set}c ∈ U := {U_set}s.2.2;
+      have ⟨B, ⟨hB1, hB2⟩⟩ := AxiomFoundation {U_set}c U'_in_U hE;
+      rw [U'_def, AxiomExtensionality] at hB1;
       rw [←hB1] at hz;
       exact (hB2 z) hz;
     }

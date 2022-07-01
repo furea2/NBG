@@ -10,8 +10,8 @@ instance : HasEq Class where
   Eq := Class.Eq
 notation:50 X " ≠ " Y => ¬ (X ＝ Y)
 
-instance : HasMem Class where
-  Mem := Class.In
+instance : HasIn Class where
+  In := Class.In
 notation:50 X " ∉ " Y => ¬ X ∈ Y
 
 def isSet (X : Class) : Prop := ∃(Y:Class), X ∈ Y

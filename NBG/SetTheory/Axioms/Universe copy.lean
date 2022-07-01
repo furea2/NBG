@@ -30,19 +30,10 @@ class Set (X : Class) where
 class SetType where
   X : Class
   x : Set X
-
 def SetType.mk₁ (X: Class) (hx: isSet X): SetType :=
   SetType.mk X ⟨hx,AllSetInU.1 hx ⟩
 def SetType.mk₂ (X: Class) (x: X ∈ U): SetType :=
   SetType.mk X ⟨AllSetInU.2 x, x⟩
-
-def SetType.Eq (X Y: SetType) : Prop := Class.Eq X.1 Y.1
-def SetType.In (X Y: SetType) : Prop := Class.In X.1 Y.1
-
-instance : HasEq SetType where
-  Eq := SetType.Eq
-instance : HasIn SetType where
-  In := SetType.In
 
 theorem SetIsSet {x : Class} : Set x → isSet x := fun ⟨h, _⟩ => h
 theorem SetInU (x : Class) [hx : Set x]: x ∈ U := hx.2

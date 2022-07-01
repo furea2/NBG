@@ -20,16 +20,15 @@ noncomputable def Union (X Y: Class) :=
   U ＼ ((U ＼ X) ∩ (U ＼ Y))
 noncomputable instance : HasUnion Class where
   Union := Union
-noncomputable def EmptyClass : Class :=
+noncomputable def UDiffU : Class :=
   U ＼ U
 noncomputable def EmptyDef := choose_spec (AxiomDifferrence U U)
-notation " ø " => EmptyClass
+notation " ø " => UDiffU
 noncomputable def SymmDiff (X Y: Class) :=
   (X ∪ Y) ＼ (X ∩ Y)
 infix:50 " △ " => SymmDiff
 
 -- intersection
-
 theorem IntersectionIntro (X Y: Class) :
   ∀z: Class, (z ∈ (X ∩ Y)) ↔ (z ∈ X) ∧ (z ∈ Y) := sorry
 
@@ -37,7 +36,10 @@ theorem IntersectionIntro (X Y: Class) :
 theorem UnionIntro (X Y: Class) :
   ∀z: Class, (z ∈ (X ∪ Y)) ↔ (z ∈ X) ∨ (z ∈ Y) := sorry
 
-def isEmptySet (E : Class) := ∀(z : Class), ¬ z ∈ E
+-- empty class
+def isEmptyClass (E : Class) := ∀(z : Class), ¬ z ∈ E
+class EmptyClass (E : Class) where
+  isEmptyClass: isEmptyClass E
 theorem EmptyClassIntro :
   ∀z: Class, ¬ z ∈ ø := by {
   intro z h;
