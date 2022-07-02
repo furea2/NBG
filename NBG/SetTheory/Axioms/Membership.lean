@@ -49,10 +49,12 @@ noncomputable def InterAll (X : Class) :=
   Diff U (Dom ((Diff U₂ E) ∩ (U ✕ X)))
 noncomputable instance : HasInterAll Class where
   InterAll := InterAll
-noncomputable def PowerClass' (X : Class) :=
-  Diff U (Dom ((RelInv E) ∩ (U ✕ (Diff U X))))
-noncomputable def PowerClass_def' (X : Class) :=
-  Diff_def U (Dom ((RelInv E) ∩ (U ✕ (Diff U X))))
+noncomputable def PowerClass' (X : Class) : Class := by
+  sorry;
+  -- Diff U (Dom ((RelInv E) ∩ (U ✕ (Diff U X))))
+noncomputable def PowerClass_def' (X : Class) : Prop := by
+  sorry;
+  -- Diff_def U (Dom ((RelInv E) ∩ (U ✕ (Diff U X))))
 def isPowerClass (PX : Class) :=
   ∃(X: Class) ,∀(Y: Class), Y ∈ PX ↔ Y ⊂ X
 class PowerClass (PX : Class) where
@@ -68,57 +70,58 @@ private theorem NotNotIff {p: Prop}: p ↔ ¬ ¬ p:= sorry
 
 theorem PowerClass_def'_is_PowerClass:
   isPowerClass (PowerClass' X) := by {
-  exists X;
-  intro Y;
-  apply Iff.intro;
-  {
-    -- intro h z hz;
-    -- have PX_def := PowerClass_def' X;
-    -- have hPX := ((PX_def Y).1 h).2;
-    -- have hY : Y ∈ U := AllSetInU.1 ⟨(PowerClass' X), h⟩;
-    -- clear PX_def h;
-    -- -- have PX_set := SetType.mk₂ Y ((PX_def Y).1 h).1;
-    -- -- clear PX_def h;
-    -- have Dom_def1 := Dom_def (RelInv E ∩ (U ✕ Diff U X));
-    -- have h1 := (Dom_def1 Y) hY;
-    -- clear Dom_def1;
-    -- rw [IffIffNotIffNot] at h1;
-    -- have h2 := h1.2 hPX;
-    -- clear h1 hPX;
-    -- rw [NotExIffAllNot] at h2;
-    -- have h3 := h2 (SetType.mk₁ z ⟨Y, hz⟩);
-    -- clear h2;
-    -- rw [NotJoinIffNotUnionNot] at h3;
-    -- cases h3;
-    -- case mp.inl h3 => {sorry;}
-    -- case mp.inr h3 => {
-    --   -- have hxy := ＜(SetType.mk₂ Y hY), (SetType.mk₁ z ⟨Y, hz⟩)＞c;
-    --   have prod_def := (Product_def U (Diff U X)) ＜(SetType.mk₂ Y hY), (SetType.mk₁ z ⟨Y, hz⟩)＞c;
-    --   rw [IffIffNotIffNot] at prod_def;
-    --   have h4 := prod_def.2 h3;
-    --   clear prod_def h3;
-    --   /-
-    --   X Y z : Class
-    --   hz : z ∈ Y
-    --   hY : Y ∈ U
-    --   h4 : ¬∃ x y, SetType.X ∈ U → SetType.X ∈ Diff U X → ＜SetType.mk₂ Y hY,SetType.mk₁ z (_ : ∃ Y, z ∈ Y)＞c ＝ ＜x,y＞c
-    --   ⊢ z ∈ X
-    --   -/
+--   exists X;
+--   intro Y;
+--   apply Iff.intro;
+--   {
+--     -- intro h z hz;
+--     -- have PX_def := PowerClass_def' X;
+--     -- have hPX := ((PX_def Y).1 h).2;
+--     -- have hY : Y ∈ U := AllSetInU.1 ⟨(PowerClass' X), h⟩;
+--     -- clear PX_def h;
+--     -- -- have PX_set := SetType.mk₂ Y ((PX_def Y).1 h).1;
+--     -- -- clear PX_def h;
+--     -- have Dom_def1 := Dom_def (RelInv E ∩ (U ✕ Diff U X));
+--     -- have h1 := (Dom_def1 Y) hY;
+--     -- clear Dom_def1;
+--     -- rw [IffIffNotIffNot] at h1;
+--     -- have h2 := h1.2 hPX;
+--     -- clear h1 hPX;
+--     -- rw [NotExIffAllNot] at h2;
+--     -- have h3 := h2 (SetType.mk₁ z ⟨Y, hz⟩);
+--     -- clear h2;
+--     -- rw [NotJoinIffNotUnionNot] at h3;
+--     -- cases h3;
+--     -- case mp.inl h3 => {sorry;}
+--     -- case mp.inr h3 => {
+--     --   -- have hxy := ＜(SetType.mk₂ Y hY), (SetType.mk₁ z ⟨Y, hz⟩)＞c;
+--     --   have prod_def := (Product_def U (Diff U X)) ＜(SetType.mk₂ Y hY), (SetType.mk₁ z ⟨Y, hz⟩)＞c;
+--     --   rw [IffIffNotIffNot] at prod_def;
+--     --   have h4 := prod_def.2 h3;
+--     --   clear prod_def h3;
+--     --   /-
+--     --   X Y z : Class
+--     --   hz : z ∈ Y
+--     --   hY : Y ∈ U
+--     --   h4 : ¬∃ x y, SetType.X ∈ U → SetType.X ∈ Diff U X → ＜SetType.mk₂ Y hY,SetType.mk₁ z (_ : ∃ Y, z ∈ Y)＞c ＝ ＜x,y＞c
+--     --   ⊢ z ∈ X
+--     --   -/
 
-    --   have h5 : (¬∃ x y, (SetType.mk₂ Y hY).X ∈ U
-    --     → (SetType.mk₁ z ⟨Y, hz⟩).X ∈ Diff U X → ＜(SetType.mk₂ Y hY),(SetType.mk₁ z ⟨Y, hz⟩)＞c ＝ ＜x,y＞c)
-    --     ↔ (¬∃ x y, (SetType.mk₂ Y hY).X ∈ U
-    --     → (SetType.mk₁ z ⟨Y, hz⟩).X ∈ Diff U X → ¬ ¬ ＜(SetType.mk₂ Y hY),(SetType.mk₁ z ⟨Y, hz⟩)＞c ＝ ＜x,y＞c) := by {
-    --       sorry;
-    --     }
-      -- have h6 := h5.1 h4;
-      -- rw [h5, NotNotIff] at h4;
-      -- have h5 := ImpIffNotImpNot.2 h4;
-      -- rw [IffIffNotIffNot] at h4
-      -- sorry;}
-    sorry;
-  }
-  {sorry;}
+--     --   have h5 : (¬∃ x y, (SetType.mk₂ Y hY).X ∈ U
+--     --     → (SetType.mk₁ z ⟨Y, hz⟩).X ∈ Diff U X → ＜(SetType.mk₂ Y hY),(SetType.mk₁ z ⟨Y, hz⟩)＞c ＝ ＜x,y＞c)
+--     --     ↔ (¬∃ x y, (SetType.mk₂ Y hY).X ∈ U
+--     --     → (SetType.mk₁ z ⟨Y, hz⟩).X ∈ Diff U X → ¬ ¬ ＜(SetType.mk₂ Y hY),(SetType.mk₁ z ⟨Y, hz⟩)＞c ＝ ＜x,y＞c) := by {
+--     --       sorry;
+--     --     }
+--       -- have h6 := h5.1 h4;
+--       -- rw [h5, NotNotIff] at h4;
+--       -- have h5 := ImpIffNotImpNot.2 h4;
+--       -- rw [IffIffNotIffNot] at h4
+--       -- sorry;}
+--     sorry;
+--   }
+--   {sorry;}
+  sorry;
 }
 
 noncomputable instance : HasPow Class where

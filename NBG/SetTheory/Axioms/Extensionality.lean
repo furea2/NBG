@@ -38,6 +38,26 @@ theorem ClassEq.trans {X Y Z : Class}:
   exact ⟨fun h => h,fun h => h⟩;
 }
 
+-- class in
+private theorem EqClassEqIn' {X Y Z: Class}:
+  X ＝ Y → (X ∈ Z → Y ∈ Z) := by {
+  intro h hx;
+  by_cases hy: Y ∈ Z;
+  {exact hy;}
+  {
+    apply False.elim;
+    sorry;
+  }
+}
+
+theorem EqClassEqIn (X Y Z: Class):
+  X ＝ Y → (X ∈ Z ↔ Y ∈ Z) := by {
+  intro h;
+  apply Iff.intro;
+  {exact EqClassEqIn' h;}
+  {exact EqClassEqIn' (ClassEq.symm h);}
+}
+
 
 -- class subset
 theorem ClassSubset.refl (X : Class):

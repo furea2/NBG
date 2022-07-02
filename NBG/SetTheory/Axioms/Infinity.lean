@@ -32,11 +32,11 @@ theorem EmptyClassIsSet: Set ø := by
   exact ⟨⟨x, in_x⟩, AllSetInU.1 ⟨x, in_x⟩⟩;
 }
 
--- finite set
-def isFiniteSet (x: Class) :=
-  ∃f: Class, Function f
-    → (Dom f ＝ x) ∧ (Rng f ∈ ω)
+-- -- finite set
+-- def isFiniteSet (x: Class) :=
+--   ∃f: Class, Function f
+--     → (Dom f ＝ x) ∧ (Rng f ∈ ω)
 
-class Finite where
-  α : Class
-  isFiniteSet : isFiniteSet α
+-- class Finite where
+--   α : Class
+--   isFiniteSet : isFiniteSet α
