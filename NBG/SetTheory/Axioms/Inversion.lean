@@ -6,7 +6,8 @@ open Classical
 -- 6. AxiomInversion
 axiom AxiomInversion :
   ∀X: Class, ∃Y: Class,
-    ∀x y: SetType, ((＜x, y＞c)∈X ↔ (＜y, x＞c)∈Y)
+    ∀x y: Class, ∃_: Set x, ∃_: Set y,
+      ((＜x, y＞) ∈ X ↔ (＜y, x＞) ∈ Y)
 noncomputable def RelInv (R: Class) := choose (AxiomInversion R)
 noncomputable def RelInv_def (R: Class) := choose_spec (AxiomInversion R)
 

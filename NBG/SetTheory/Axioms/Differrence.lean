@@ -12,21 +12,21 @@ noncomputable def Diff_def (X Y: Class) := choose_spec (AxiomDifferrence X Y)
 noncomputable instance : HasDiff Class where
   Diff := Diff
 
-noncomputable def Intersection (X Y: Class) :=
+noncomputable def Intersection_mk (X Y: Class) :=
   X ＼ (X ＼ Y)
 noncomputable instance : HasInter Class where
-  Inter := Intersection
-noncomputable def Union (X Y: Class) :=
+  Inter := Intersection_mk
+noncomputable def Union_mk (X Y: Class) :=
   U ＼ ((U ＼ X) ∩ (U ＼ Y))
 noncomputable instance : HasUnion Class where
-  Union := Union
+  Union := Union_mk
 noncomputable def UDiffU : Class :=
   U ＼ U
 noncomputable def EmptyDef := choose_spec (AxiomDifferrence U U)
 notation " ø " => UDiffU
-noncomputable def SymmDiff (X Y: Class) :=
+noncomputable def SymmDiff_mk (X Y: Class) :=
   (X ∪ Y) ＼ (X ∩ Y)
-infix:50 " △ " => SymmDiff
+infix:50 " △ " => SymmDiff_mk
 
 -- intersection
 theorem IntersectionIntro (X Y: Class) :

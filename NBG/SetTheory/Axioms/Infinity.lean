@@ -5,14 +5,15 @@ open Classical
 
 -- 13. AxiomInfinity
 axiom AxiomInfinity :
-  ∃x: Class, x∈U
-    ∧ ((ø∈x) ∧ ∀n: SetType, (
-      (hn: n.1 ∈ x) → (n.1 ∪ {n}c) ∈ x))
+  ∃x: Class, (x∈U)
+    ∧ ((ø∈x) ∧ ∀n: Class,
+      ((hn: n ∈ x) → (n ∪ (@Singleton_mk n (Set.mk₁ hn))) ∈ x))
+
 
 def isInfinitySet (x: Class) :=
   x∈U
-    → ((ø∈x) ∧ ∀n: SetType, (
-      (hn: n.1 ∈ x) → (n.1 ∪ {n}c) ∈ x))
+    → ((ø∈x) ∧ ∀n: Class, (
+      ((hn: n ∈ x) → (n ∪ (@Singleton_mk n (Set.mk₁ hn))) ∈ x)))
 
 theorem IndClassExists:
   ∃Ind: Class, ∀x: Class,
@@ -30,11 +31,6 @@ theorem EmptyClassIsSet: Set ø := by
   have in_x := (choose_spec AxiomInfinity).2.1;
   exact ⟨⟨x, in_x⟩, AllSetInU.1 ⟨x, in_x⟩⟩;
 }
-
-theorem EmptySet: SetType where
-  X := ø
-  x := EmptyClassIsSet
-notation " ø_set " => EmptySet
 
 -- finite set
 def isFiniteSet (x: Class) :=

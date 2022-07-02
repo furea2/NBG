@@ -40,11 +40,11 @@ theorem Russel (R : Class):
 
 theorem UnivIsProper:
   isProper U := by {
-  intro h;
-  let U_set : SetType := SetType.mk₁ U h;
-  have U'_def : ∀u: Class, u ∈ {U_set}c ↔ u ＝ U := (Singleton_def U_set);
-  have hU' : U ∈ {U_set}c := (U'_def U).2 (ClassEq.refl U);
-  by_cases hE : {U_set}c ＝ ø;
+  intro ⟨Y, hY⟩;
+  let set_U : Set U := Set.mk₁ hY;
+  have U'_def : ∀u: Class, u ∈ (Singleton_mk U) ↔ u ＝ U := (Singleton_def U).2;
+  have hU' : U ∈ (Singleton_mk U) := (U'_def U).2 (ClassEq.refl U);
+  by_cases hE : (Singleton_mk U) ＝ ø;
   {
     rw [AxiomExtensionality] at hE;
     rw [hE] at hU';
@@ -52,11 +52,13 @@ theorem UnivIsProper:
     exact this.2 this.1;
   }
   {
-    have hUU := AllSetInU.1 h;
-    have : ∀z: Class, z∈ U → ¬ z ∈ {U_set}c := by {
+    have hUU := set_U.2;
+    have : ∀z: Class, z∈ U → ¬ z ∈ (Singleton_mk U) := by {
       intro z hz;
-      have U'_in_U : {U_set}c ∈ U := {U_set}s.2.2;
-      have ⟨B, ⟨hB1, hB2⟩⟩ := AxiomFoundation {U_set}c U'_in_U hE;
+      have U'_in_U : (Singleton_mk U) ∈ U :=
+        sorry;
+        -- (Singleton_def U).2.2 (Singleton_mk U);
+      have ⟨B, ⟨hB1, hB2⟩⟩ := AxiomFoundation (Singleton_mk U) U'_in_U hE;
       rw [U'_def, AxiomExtensionality] at hB1;
       rw [←hB1] at hz;
       exact (hB2 z) hz;

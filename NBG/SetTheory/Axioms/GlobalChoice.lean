@@ -5,11 +5,14 @@ open Classical
 
 -- 15. AxiomGlobalChoice
 axiom AxiomGlobalChoice:
-  ∃F: Class, Function F → ∀x: SetType,
-    (¬ x.1＝ø → (∃y: SetType, (＜x, y＞c ∈ F)))
+  ∃F: Class,∃_: Function F,∀x: Class, ∀_: Set x,
+    (¬ x＝ø → (∃y: Class,∃hy: y∈x,
+      (@Pair_mk x y _ (Set.mk₁ hy)) ∈ F))
 
 -- ex. AxiomChoice
 theorem AxiomChoice:
-  ∃x: SetType, ∃f: Class, Function f → ∀y: SetType,
-    (¬ y.1＝ø → (∃z: SetType, (＜y, z＞c ∈ f))) := sorry
+  ∀x: Class, ∀_: Set x,
+    ∃f: Class, ∃_: Function f, ∀y: Class, ∃hy: y∈x,
+      (¬ y＝ø → (∃z: Class,∃hz: z∈y,
+        ((@Pair_mk y z (Set.mk₁ hy) (Set.mk₁ hz)) ∈ f))) := sorry
 

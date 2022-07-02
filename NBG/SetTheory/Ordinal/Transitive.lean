@@ -14,8 +14,8 @@ noncomputable def Tr : Class := (choose TrClassisExists)
 noncomputable def Tr_def := (choose_spec TrClassisExists)
 
 def isInductive (X: Class) :=
-  ((ø∈X) ∧ ∀x: SetType,
-    ((hn: x.1∈X) → (x.1 ∪ {x}c) ∈ X))
+  ((ø∈X) ∧ ∀x: Class,
+    ((hn: x ∈ X) → (x ∪ (@Singleton_mk x (Set.mk₁ hn))) ∈ X))
 
 theorem TrIsInductive: isInfinitySet Tr := sorry
 
