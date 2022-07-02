@@ -24,11 +24,10 @@ theorem AllSetInU {x : Class}: isSet x ↔ x∈U := by {
 }
 
 -- type Set
-def isSet' (X : Class) : Prop := ∃(Y:Class), X ∈ Y
 class Set (X : Class) where
   isSet : isSet X
   inU   : X ∈ U
-def Set.mk₁ {X: Class} (hx: isSet' X): Set X :=
+def Set.mk₁ {X: Class} (hx: isSet X): Set X :=
   Set.mk hx (AllSetInU.1 hx)
 def Set.mk₂ {X: Class} (hx: X ∈ U): Set X :=
   Set.mk (AllSetInU.2 hx) hx
