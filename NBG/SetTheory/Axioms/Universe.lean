@@ -24,7 +24,6 @@ theorem AllSetInU {x : Class}: isSet x ↔ x∈U := by {
 }
 
 -- type Set
-def isSet' (X : Class) : Prop := ∃(Y:Class), X ∈ Y
 class Set (X : Class) where
   isSet : isSet X
   inU   : X ∈ U
