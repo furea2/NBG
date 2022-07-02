@@ -8,7 +8,7 @@ axiom AxiomDifferrence :
   ∀X Y: Class, ∃Z: Class,
     ∀u: Class, (u∈Z ↔ (u ∈ X ∧ u ∉ Y))
 noncomputable def Diff (X Y: Class) := choose (AxiomDifferrence X Y)
-noncomputable def DiffDif (X Y: Class) := choose_spec (AxiomDifferrence X Y)
+noncomputable def Diff_def (X Y: Class) := choose_spec (AxiomDifferrence X Y)
 noncomputable instance : HasDiff Class where
   Diff := Diff
 
@@ -43,7 +43,7 @@ class EmptyClass (E : Class) where
 theorem EmptyClassIntro :
   ∀z: Class, ¬ z ∈ ø := by {
   intro z h;
-  have := ((DiffDif U U) z).1 h;
+  have := ((Diff_def U U) z).1 h;
   exact this.right this.left;
 }
 

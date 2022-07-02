@@ -15,9 +15,6 @@ instance : HasIn Class where
 notation:50 X " ∉ " Y => ¬ X ∈ Y
 
 def isSet (X : Class) : Prop := ∃(Y:Class), X ∈ Y
--- class Set (X : Class) where
---   isSet : ∃(Y:Class), X ∈ Y
-
 
 def isProper (X : Class) : Prop := ¬ (isSet X)
 class ProperClass (X : Class) where

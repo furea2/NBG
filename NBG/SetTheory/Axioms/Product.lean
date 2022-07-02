@@ -9,6 +9,7 @@ axiom AxiomProduct :
     ∀z: Class, (z∈Z ↔ ∃x y: SetType, (hx: x.1 ∈X) → (hy: y.1 ∈Y)
       → (z ＝ ＜x, y＞c))
 noncomputable def Product (X Y: Class) := choose (AxiomProduct X Y)
+noncomputable def Product_def (X Y: Class) := choose_spec (AxiomProduct X Y)
 noncomputable instance : HasProduct Class where
   Product := Product
 noncomputable def U₂ := Product U U

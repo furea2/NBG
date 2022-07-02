@@ -48,12 +48,15 @@ notation "{"x","y"}s" => PairSet x y
 
 
 -- ordered pair
--- noncomputable def OrdPair (x y: SetType) : Class := @Pair x y
-noncomputable def OrdPair_def (x y: SetType) := @Pair_def x y
--- noncomputable def OrdPairSet (x: SetType) (y: SetType) : SetType :=
---   (@PairSet {x}s {x, y}s)
-notation "＜"x","y"＞c" => { {x}s , {x, y}s }c
-notation "＜"x","y"＞s" => { {x}s , {x, y}s }s
+noncomputable def OrdPair (x y: SetType) : Class := { {x}s , {x, y}s }c
+noncomputable def OrdPair_def (x y: SetType) := Pair_def {x}s {x, y}s
+noncomputable def OrdPairSet (x y: SetType) : SetType := PairSet {x}s {x, y}s
+notation "＜"x","y"＞c" => OrdPair x y
+notation "＜"x","y"＞s" => OrdPairSet x y
+
+noncomputable def OrdTriple (x y z: SetType) : Class := ＜＜x, y＞s, z＞s.1
+noncomputable def OrdTriple_def (x y z: SetType) := OrdPair_def ＜x, y＞s z
+noncomputable def OrdTripleSet (x y z: SetType): SetType := ＜＜x, y＞s, z＞s
 
 -- ordered triple
 notation "＜"x","y","z"＞c" => ＜＜x, y＞s, z＞s.1

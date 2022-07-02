@@ -6,9 +6,9 @@ class HasEq (α : Type u) where
   Eq : α → α → Prop
 infix:50 " ＝ "  => HasEq.Eq
 
-class HasMem (α : Type u) where
-  Mem : α → α → Prop
-infix:50 " ∈ "  => HasMem.Mem
+class HasIn (α : Type u) where
+  In : α → α → Prop
+infix:50 " ∈ "  => HasIn.In
 
 class HasSubset (α : Type u) where
   Subset : α → α → Prop

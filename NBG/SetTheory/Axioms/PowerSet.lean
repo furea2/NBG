@@ -5,6 +5,5 @@ open Classical
 
 -- 12. AxiomPowerSet
 axiom AxiomPowerSet :
-  ∀x: Class, ∃Z: Class,
-    ∀y: Class, y∈Z ↔ (∀z: Class, z∈y → z∈x)
+  ∀x: SetType, isSet (𝒫 x.1)
 
