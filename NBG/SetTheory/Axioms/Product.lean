@@ -8,16 +8,20 @@ axiom AxiomProduct :
   ∀X Y: Class, ∃Z: Class,
     ∀z: Class, (z∈Z ↔ ∃x y: Class, ∃hx: x ∈ X,∃hy: y ∈ Y,
       (z ＝ (@OrdPair_mk x y (Set.mk₁ hx) (Set.mk₁ hy))))
-noncomputable def Product_mk (X Y: Class) : Class :=
+noncomputable def ProductClass_mk (X Y: Class) : Class :=
   choose (AxiomProduct X Y)
-noncomputable def Product_def (X Y: Class):
-  ∀z: Class, (z ∈ (Product_mk X Y) ↔ ∃x y: Class, ∃hx: x ∈ X,∃hy: y ∈ Y,
+noncomputable def ProductClass_def (X Y: Class):
+  ∀z: Class, (z ∈ (ProductClass_mk X Y) ↔ ∃x y: Class, ∃hx: x ∈ X,∃hy: y ∈ Y,
     (z ＝ (@OrdPair_mk x y (Set.mk₁ hx) (Set.mk₁ hy)))) :=
   choose_spec (AxiomProduct X Y)
 noncomputable instance : HasProduct Class where
-  Product := Product_mk
-noncomputable def U₂ := Product_mk U U
-noncomputable def U₃ := Product_mk U₂ U
+  Product := ProductClass_mk
+noncomputable def U₂ := ProductClass_mk U U
+noncomputable def U₃ := ProductClass_mk U₂ U
+
+-- Todo: ProductClassIntro
+
+
 
 theorem SetProductIsSet (x y : Class) [Set x] [Set y]: isSet (x ✕ y) :=
   sorry

@@ -6,35 +6,78 @@ open Classical
 -- 8. AxiomMembership
 axiom AxiomMembership :
   ∃E: Class,
-    ∀x y: Class, ∃_: Set x, ∃_: Set y,
+    ∀x y: Class, ∀_: Set x, ∀_: Set y,
       (＜x, y＞ ∈ E ↔ x∈y)
 
 -- class E
 noncomputable def E: Class := choose AxiomMembership
 noncomputable def E_def:
-  ∀x y: Class, ∃_: Set x, ∃_: Set y,
+  ∀x y: Class, ∀_: Set x, ∀_: Set y,
     (＜x, y＞ ∈ E ↔ x∈y) :=
   choose_spec AxiomMembership
 
 theorem DomEEqUniv : (Dom E) ＝ U := sorry
 
 -- Image type
-theorem ImageClassExists (R X: Class) [Relation R]:
-  ∃Im: Class, ∀y: Class, ∃_: Set y,
+theorem ImageClassExists (R X: Class) [hR: Relation R]:
+  ∃Im: Class, ∀y: Class, ∀_: Set y,
     ((y ∈ Im)
       ↔ (∃x: Class, ∃(hx:x ∈ X), ((@OrdPair_mk x y (Set.mk₁ hx) _)∈ R))) := by {
-  sorry;
+  have : Relation (R ∩ (X ✕ U)) := sorry;
+  let im := Rng (R ∩ (X ✕ U));
+  let im_def := Rng_def (R ∩ (X ✕ U));
+  have relinv_def := RelInv_def (R ∩ (X ✕ U));
+  exists im;
+  intro y hy;
+  apply Iff.intro;
+  {
+    intro h;
+    have ⟨x, hx, h_yx_in ⟩ := (im_def y hy).1 h;
+    have ⟨x', y', set_x', set_y', h_xy_in', heq'⟩ := (relinv_def ＜y, x＞).1 h_yx_in;
+    rw [IntersectionClassIntro] at h_xy_in';
+    have ⟨x'', y'', hx'', hy'', heq''⟩ := (ProductClass_def X U ＜x', y'＞).1 h_xy_in'.2;
+    have set_x'' := Set.mk₁ hx'';
+    have set_y'' := Set.mk₁ hy'';
+    rw [OrdPairEq] at heq';
+    rw [OrdPairEq] at heq'';
+    have heq': x'' ＝ x ∧ y ＝ y :=
+      ⟨ClassEq.trans (ClassEq.symm heq''.1) (ClassEq.symm heq'.2), ClassEq.refl y⟩;
+    have hx''_in:= (hR.1 ＜x'', y＞).2 ⟨x, y,_ ,_,OrdPairEq.2 heq'⟩;
+    exists x'', hx'';
+  }
+  {
+    intro ⟨x, x_in_X, xy_in_R⟩;
+    have set_x := Set.mk₁ x_in_X;
+    apply (im_def y hy).2;
+    clear im_def;
+    exists x, set_x;
+    apply (relinv_def ＜y, x＞).2;
+    clear relinv_def;
+    -- have := hR.1 ＜x,y＞;
+    have h_xy_in: ＜x,y＞ ∈ (R ∩ (X ✕ U)):= by {
+      rw [IntersectionClassIntro];
+      apply And.intro;
+      {trivial;}
+      {
+        apply (ProductClass_def X U ＜x, y＞).2;
+        exists x, y, x_in_X, hy.2;
+        exact ClassEq.refl _;
+      }
+    }
+    exists x,y,set_x,hy, h_xy_in;
+    exact (ClassEq.refl ＜y, x＞);
+  }
 }
 noncomputable def Im (R X: Class) [Relation R]: Class :=
   choose (ImageClassExists R X)
 noncomputable def ImageClass_def (R X: Class) [Relation R]:
-  ∀y: Class, ∃_: Set y,
+  ∀y: Class, ∀_: Set y,
       ((y ∈ (Im R X))
         ↔ (∃x: Class, ∃(hx:x ∈ X), ((@OrdPair_mk x y (Set.mk₁ hx) _)∈ R))) :=
   choose_spec (ImageClassExists R X)
 
 theorem PreImageClassExists (R X: Class) [Relation R]:
-  ∃PreIm: Class, ∀y: Class, ∃_: Set y,
+  ∃PreIm: Class, ∀y: Class, ∀_: Set y,
     ((y ∈ PreIm)
       ↔ (∃x: Class, ∃(hx:x ∈ X), ((@OrdPair_mk x y (Set.mk₁ hx) _)∈ (RelInv R)))) :=
   @ImageClassExists (RelInv R) X ⟨RelInvRelationIsRelation⟩
@@ -46,6 +89,7 @@ def isFunction (F : Class) [Relation F] : Prop :=
     ＜x, y＞ ∈ F → ＜x', y'＞ ∈ F → x ＝x' → y ＝ y'
 class Function (F : Class) extends Relation F where
   isFunction : isFunction F
+
 
 noncomputable def Apply (F x: Class) [hx: Set x] {h: x ∈ (Dom F)} : Class :=
   choose ((Dom_def F x hx).1 h)
@@ -75,6 +119,12 @@ noncomputable def as_map (F : Class) [Relation F]: (x: Class) → {_: x ∈ Dom 
 exact fun x hx => @Apply F x (Set.mk₁ hx) hx
 notation F"【"x"】" => as_map F x
 
+/-- The brige theorem of image and function, namely f[X] = {f(x)}. -/
+theorem SingleSetFunctionImageIsSingleton (F x: Class) [hx: Set x] {h: x ∈ (Dom F)} [hF: Function F]:
+  Im F x ＝ @Singleton_mk (@as_map F hF.1 x h) (TargetIsSet F x) := by {
+  sorry;
+}
+
 -- injective, surjective, bijective
 
 -- Todo
@@ -99,80 +149,31 @@ noncomputable instance : HasInterAll Class where
 -- PowerClass
 noncomputable def PowerClass_mk' (X : Class) : Class :=
   Diff U (Dom ((RelInv E) ∩ (U ✕ (Diff U X))))
-noncomputable def PowerClass_def' (X : Class) :=
-  Diff_def U (Dom ((RelInv E) ∩ (U ✕ (Diff U X))))
 
+theorem PowerClassExists (X : Class):
+  ∃PX: Class,
+    ∀z: Class,
+      z ∈ PX ↔ (z ⊂ X) := by {
+  let px := Diff U (Dom ((RelInv E) ∩ (U ✕ (Diff U X))));
+  let px_def := Diff_def U (Dom ((RelInv E) ∩ (U ✕ (Diff U X))));
+  sorry;
+}
+
+noncomputable def PowerClass_mk (X : Class) : Class :=
+  choose (PowerClassExists X)
+noncomputable instance : HasPow Class where
+  Pow := PowerClass_mk
+noncomputable def PowerClass_def (X : Class):
+  ∀z: Class,
+    z ∈ 𝒫 X ↔ (z ⊂ X) :=
+  choose_spec (PowerClassExists X)
 def isPowerClass (PX : Class) :=
   ∃(X: Class) ,∀(Y: Class), Y ∈ PX ↔ Y ⊂ X
 class PowerClass (PX : Class) where
   isPowerClass: isPowerClass PX
 
--- private theorem ImpIffNotImpNot {p q: Prop}: (p → q) ↔ (¬ q → ¬ p):= sorry
--- private theorem IffIffNotIffNot {p q: Prop}: (p ↔ q) ↔ (¬ q ↔ ¬ p):= sorry
--- private theorem NotExIffAllNot {α: Type u} {p: α → Prop}:
---   ¬ (∃(x : α), p x) ↔ (∀(y: α), ¬ p y) := sorry
--- private theorem NotJoinIffNotUnionNot {X Y: Class}:
---   ∀(z: Class), (¬ (z ∈ (X ∩ Y)) ↔ (¬ z ∈ X) ∨ (¬ z ∈ Y)) := sorry
--- private theorem NotNotIff {p: Prop}: p ↔ ¬ ¬ p:= sorry
-
 theorem PowerClass_def'_is_PowerClass:
-  isPowerClass (PowerClass_mk' X) := by {
---   exists X;
---   intro Y;
---   apply Iff.intro;
---   {
---     -- intro h z hz;
---     -- have PX_def := PowerClass_def' X;
---     -- have hPX := ((PX_def Y).1 h).2;
---     -- have hY : Y ∈ U := AllSetInU.1 ⟨(PowerClass' X), h⟩;
---     -- clear PX_def h;
---     -- -- have PX_set := SetType.mk₂ Y ((PX_def Y).1 h).1;
---     -- -- clear PX_def h;
---     -- have Dom_def1 := Dom_def (RelInv E ∩ (U ✕ Diff U X));
---     -- have h1 := (Dom_def1 Y) hY;
---     -- clear Dom_def1;
---     -- rw [IffIffNotIffNot] at h1;
---     -- have h2 := h1.2 hPX;
---     -- clear h1 hPX;
---     -- rw [NotExIffAllNot] at h2;
---     -- have h3 := h2 (SetType.mk₁ z ⟨Y, hz⟩);
---     -- clear h2;
---     -- rw [NotJoinIffNotUnionNot] at h3;
---     -- cases h3;
---     -- case mp.inl h3 => {sorry;}
---     -- case mp.inr h3 => {
---     --   -- have hxy := ＜(SetType.mk₂ Y hY), (SetType.mk₁ z ⟨Y, hz⟩)＞c;
---     --   have prod_def := (Product_def U (Diff U X)) ＜(SetType.mk₂ Y hY), (SetType.mk₁ z ⟨Y, hz⟩)＞c;
---     --   rw [IffIffNotIffNot] at prod_def;
---     --   have h4 := prod_def.2 h3;
---     --   clear prod_def h3;
---     --   /-
---     --   X Y z : Class
---     --   hz : z ∈ Y
---     --   hY : Y ∈ U
---     --   h4 : ¬∃ x y, SetType.X ∈ U → SetType.X ∈ Diff U X → ＜SetType.mk₂ Y hY,SetType.mk₁ z (_ : ∃ Y, z ∈ Y)＞c ＝ ＜x,y＞c
---     --   ⊢ z ∈ X
---     --   -/
-
---     --   have h5 : (¬∃ x y, (SetType.mk₂ Y hY).X ∈ U
---     --     → (SetType.mk₁ z ⟨Y, hz⟩).X ∈ Diff U X → ＜(SetType.mk₂ Y hY),(SetType.mk₁ z ⟨Y, hz⟩)＞c ＝ ＜x,y＞c)
---     --     ↔ (¬∃ x y, (SetType.mk₂ Y hY).X ∈ U
---     --     → (SetType.mk₁ z ⟨Y, hz⟩).X ∈ Diff U X → ¬ ¬ ＜(SetType.mk₂ Y hY),(SetType.mk₁ z ⟨Y, hz⟩)＞c ＝ ＜x,y＞c) := by {
---     --       sorry;
---     --     }
---       -- have h6 := h5.1 h4;
---       -- rw [h5, NotNotIff] at h4;
---       -- have h5 := ImpIffNotImpNot.2 h4;
---       -- rw [IffIffNotIffNot] at h4
---       -- sorry;}
---     sorry;
---   }
---   {sorry;}
-  sorry;
-}
-
-noncomputable instance : HasPow Class where
-  Pow := PowerClass_mk'
+  isPowerClass (𝒫 X) := ⟨X, PowerClass_def X⟩
 
 theorem UnivIsClosedPowerSet:
   U ＝ 𝒫 U := sorry
