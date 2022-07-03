@@ -6,7 +6,11 @@ open Classical
 -- 2. AxiomUniverse
 axiom AxiomUniverse :
   ∃U : Class, ∀x: Class, (x∈U ↔ ∃X: Class,(x∈X))
-noncomputable def U := choose AxiomUniverse
+noncomputable def U: Class :=
+  choose AxiomUniverse
+noncomputable def U_def:
+  ∀x: Class, (x∈U ↔ ∃X: Class,(x∈X)) :=
+  choose_spec AxiomUniverse
 
 theorem UniqueU :
   isUnique (fun U => ∀x: Class, (x∈U ↔ ∃X: Class,(x∈X))) := by {
@@ -19,8 +23,8 @@ theorem UniqueU :
 
 theorem AllSetInU {x : Class}: isSet x ↔ x∈U := by {
   apply Iff.intro;
-  exact fun ⟨y, h⟩ => (choose_spec AxiomUniverse x).2 ⟨y, h⟩;
-  exact fun h => (choose_spec AxiomUniverse x).1 h;
+  {exact fun ⟨y, h⟩ => (choose_spec AxiomUniverse x).2 ⟨y, h⟩;}
+  {exact fun h => (choose_spec AxiomUniverse x).1 h;}
 }
 
 -- type Set

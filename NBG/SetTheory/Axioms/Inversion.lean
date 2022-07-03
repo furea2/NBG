@@ -34,7 +34,7 @@ theorem RelInvExists (R: Class) [hR: Relation R]:
     sorry;
   }
 }
-noncomputable def RelInv (R: Class) [Relation R]:=
+noncomputable def RelInv (R: Class) [Relation R]: Class :=
   choose (RelInvExists R)
 noncomputable def RelInv_def (R: Class) [Relation R]:
   ∀z: Class, (z ∈ RelInv R)

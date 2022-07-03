@@ -15,8 +15,12 @@ theorem OrdinalClassExists:
   ∃On: Class, ∀x: Class, ∀_:Set x,
     x ∈ On ↔ isOrdinal x := sorry
 
-noncomputable def On : Class := (choose OrdinalClassExists)
-noncomputable def On_def := (choose_spec OrdinalClassExists)
+noncomputable def On : Class :=
+  choose OrdinalClassExists
+noncomputable def On_def:
+  ∀x: Class, ∀_:Set x,
+    x ∈ On ↔ isOrdinal x :=
+  choose_spec OrdinalClassExists
 
 theorem On_property_1:
   isTransitive On := sorry
@@ -30,8 +34,6 @@ theorem On_property_5:
   ∀x:Class, ∀_:Set x, (x⊂On → ⋃ x ∈ On) := sorry
 theorem On_property_6:
   isProper On := sorry
-theorem On_property_7:
-  ω ⊂ On := sorry
-theorem On_property_8:
-  ω ∈ On := sorry
+theorem OmegaIsInOn: ω ⊂ On := sorry
+theorem OmegaSubsetOn: ω ∈ On := sorry
 

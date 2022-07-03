@@ -8,8 +8,11 @@ axiom AxiomMembership :
   ∃E: Class,
     ∀x y: Class, ∃_: Set x, ∃_: Set y,
       (＜x, y＞ ∈ E ↔ x∈y)
-noncomputable def E := choose AxiomMembership
-noncomputable def E_def := choose_spec AxiomMembership
+noncomputable def E: Class := choose AxiomMembership
+noncomputable def E_def:
+  ∀x y: Class, ∃_: Set x, ∃_: Set y,
+    (＜x, y＞ ∈ E ↔ x∈y) :=
+  choose_spec AxiomMembership
 theorem DomEEqUniv : (Dom E) ＝ U := sorry
 def isFunction (F : Class) [Relation F] : Prop :=
   ∀x x' y y': Class, ∃_: Set x, ∃_: Set x', ∃_: Set y, ∃_: Set y',

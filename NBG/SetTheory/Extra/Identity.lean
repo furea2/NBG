@@ -12,7 +12,10 @@ theorem SubsetInductiveClassExists:
 
 noncomputable def S : Class :=
   choose SubsetInductiveClassExists
-noncomputable def S_def :=
+noncomputable def S_def:
+  ∀z:Class,
+    (z ∈ S ↔ ∃x y: Class, ∃_: Set x, ∃_: Set y, ∃_: x ⊂ y,
+      z ＝ ＜x, y＞) :=
   choose_spec SubsetInductiveClassExists
 
 theorem SubsetPairAreInS {x y: Class} [hx: Set x] [hy: Set y]:
@@ -28,7 +31,9 @@ theorem IdentityFunctionExists:
 
 noncomputable def IdClass : Class :=
   choose IdentityFunctionExists
-noncomputable def IdClass_def :=
+noncomputable def IdClass_def:
+  ∀z:Class,
+    (z ∈ IdClass ↔ ∃x: Class, ∃_: Set x, z ＝ ＜x, x＞) :=
   choose_spec IdentityFunctionExists
 
 theorem AllIdSetIsInId (x: Class) [hx: Set x]:

@@ -36,9 +36,10 @@ theorem SingletonSetExists (X: Class) [hx: Set X]:
     {exact fun h => (Or.inl h);}
   }
 }
-noncomputable def Singleton_mk (X: Class) [Set X] : Class :=
+noncomputable def Singleton_mk (X: Class) [Set X]: Class :=
   choose (SingletonSetExists X)
-noncomputable def Singleton_def (X: Class) [Set X] :=
+noncomputable def Singleton_def (X: Class) [Set X]:
+  ((Singleton_mk X) ∈ U) ∧ (∀u: Class, (u ∈ (Singleton_mk X) ↔ (u ＝ X))) :=
   choose_spec (SingletonSetExists X)
 noncomputable def Singleton_is_Set (X: Class) [Set X]: Set (Singleton_mk X) :=
   Set.mk₂ (Singleton_def X).1

@@ -19,7 +19,7 @@ theorem IndClassExists:
   ∃Ind: Class, ∀x: Class,
     (x∈Ind) ↔ (isInfinitySet x) := sorry
 
-noncomputable def Ind := choose IndClassExists
+noncomputable def Ind: Class := choose IndClassExists
 
 noncomputable def Omega := ⋂ Ind
 notation "ω" => Omega

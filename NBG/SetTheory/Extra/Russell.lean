@@ -48,8 +48,8 @@ theorem UnivIsProper:
   {
     rw [AxiomExtensionality] at hE;
     rw [hE] at hU';
-    have := (EmptyDef U).1 hU';
-    exact this.2 this.1;
+    have := EmptyClass_def U;
+    contradiction;
   }
   {
     have hUU := set_U.2;
