@@ -7,7 +7,8 @@ open Classical
 axiom AxiomDifferrence :
   ∀X Y: Class, ∃Z: Class,
     ∀u: Class, (u∈Z ↔ (u ∈ X ∧ u ∉ Y))
-noncomputable def Diff (X Y: Class): Class := choose (AxiomDifferrence X Y)
+noncomputable def Diff (X Y: Class): Class :=
+  choose (AxiomDifferrence X Y)
 noncomputable def Diff_def (X Y: Class):
   ∀u: Class, (u ∈ (Diff X Y) ↔ (u ∈ X ∧ u ∉ Y)) :=
   choose_spec (AxiomDifferrence X Y)
@@ -34,12 +35,14 @@ theorem IntersectionClassExists:
 }
 noncomputable def IntersectionClass_mk (X Y: Class) :=
   choose (IntersectionClassExists X Y)
-noncomputable def IntersectionClass_def (X Y: Class) :=
-  choose_spec (IntersectionClassExists X Y)
 noncomputable instance : HasInter Class where
   Inter := IntersectionClass_mk
+noncomputable def IntersectionClass_def (X Y: Class):
+  ∀z: Class, ((z ∈ (X ∩ Y)) ↔ (z ∈ X) ∧ (z ∈ Y)) :=
+  choose_spec (IntersectionClassExists X Y)
 theorem IntersectionClassIntro (X Y: Class) :
-  ∀z: Class, (z ∈ (X ∩ Y)) ↔ (z ∈ X) ∧ (z ∈ Y) := sorry
+  ∀z: Class, (z ∈ (X ∩ Y)) ↔ (z ∈ X) ∧ (z ∈ Y) :=
+  IntersectionClass_def X Y
 def isIntersectionClass {X Y: Class} (I: Class) :=
   ∀z: Class, (z ∈ I) ↔ (z ∈ X) ∧ (z ∈ Y)
 class IntersectionClass {X Y: Class} (I : Class) where
@@ -70,12 +73,14 @@ theorem UnionClassExists:
 }
 noncomputable def UnionClass_mk (X Y: Class) :=
   choose (UnionClassExists X Y)
-noncomputable def UnionClass_def (X Y: Class) :=
-  choose_spec (UnionClassExists X Y)
 noncomputable instance : HasUnion Class where
   Union := UnionClass_mk
+noncomputable def UnionClass_def (X Y: Class):
+  ∀z: Class, ((z ∈ (X ∪ Y)) ↔ (z ∈ X) ∨ (z ∈ Y)) :=
+  choose_spec (UnionClassExists X Y)
 theorem UnionClassIntro (X Y: Class) :
-  ∀z: Class, (z ∈ (X ∪ Y)) ↔ (z ∈ X) ∨ (z ∈ Y) := sorry
+  ∀z: Class, (z ∈ (X ∪ Y)) ↔ (z ∈ X) ∨ (z ∈ Y) :=
+  UnionClass_def X Y
 def isUnionClass {X Y: Class} (I: Class) :=
   ∀z: Class, (z ∈ I) ↔ (z ∈ X) ∨ (z ∈ Y)
 class UnionClass {X Y: Class} (I : Class) where
@@ -104,6 +109,16 @@ def isEmptyClass (E : Class) : Prop := ∀(z : Class), ¬ z ∈ E
 class EmptyClass (E : Class) where
   isEmptyClass: isEmptyClass E
 
+def isNonEmptyClass (X : Class) : Prop := ∃(z : Class), z ∈ X
+class NonEmptyClass (X : Class) where
+  isNonEmptyClass: isNonEmptyClass X
+
+theorem EmptyClassIsNotNonEmpty {X : Class}:
+  isEmptyClass X → ¬ isNonEmptyClass X :=
+  fun h1 ⟨z, h2⟩ => (h1 z) h2
+theorem NonEmptyClassIsNotEmpty {X : Class}:
+  isNonEmptyClass X → ¬ isEmptyClass X :=
+  fun ⟨z, h1⟩ h2 => (h2 z) h1
 
 -- symmdiff
 noncomputable def SymmDiffClass_mk' (X Y: Class) :=
@@ -121,7 +136,8 @@ noncomputable def SymmDiffClass_def (X Y: Class) :=
 infix:50 " △ " => SymmDiffClass_mk
 theorem SymmDiffClassIntro (X Y: Class) :
   ∀z: Class, (z ∈ (X △ Y)) ↔
-    (z ∈ (X ＼ Y)) ∧ (z ∈ (Y ＼ X)) := sorry
+    (z ∈ (X ＼ Y)) ∧ (z ∈ (Y ＼ X)) :=
+  SymmDiffClass_def X Y
 def isSymmDiffClass {X Y: Class} (Z: Class) :=
   ∀z: Class, (z ∈ Z) ↔ (z ∈ (X ＼ Y) ∧ z ∈ (Y ＼ X))
 class SymmDiffClass {X Y: Class} (I : Class) where
@@ -132,7 +148,7 @@ class SymmDiffClass {X Y: Class} (I : Class) where
 theorem EmptyHasNoClass : ∀(X : Class), ¬(X ∈ ø) :=
   EmptyClass_def
 
-theorem UniqueEmptySet :
+theorem EmptySetIsUnique :
   isUnique (fun E : Class => ∀(z : Class), ¬ z ∈ E) := by {
   intro E E' hE hE';
   apply (AxiomExtensionality E E').2;
