@@ -5,6 +5,8 @@ open Classical
 
 -- 10. AxiomReplacement
 axiom AxiomReplacement :
-  ∀F x: Class, ∀(_: Function F), ∀(_: Set x),
-    (h: x ∈ Dom F) → isSet (@Apply F x _ h)
+  ∀F x: Class, ∀(hF: Function F), ∀(_: Set x),
+    isSet (@Im F x hF.1)
+
+
 

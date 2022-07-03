@@ -9,3 +9,4 @@ axiom AxiomCycle :
     ∃_: Set u, ∃_: Set v, ∃_: Set w,
       ＜u,v,w＞ ∈ X ↔ ＜w,u,v＞ ∈ Y
 
+-- ↺↻

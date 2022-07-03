@@ -152,7 +152,7 @@ noncomputable def PowerClass_mk' (X : Class) : Class :=
 
 theorem PowerClassExists (X : Class):
   ∃PX: Class,
-    ∀z: Class,
+    ∀z: Class, ∀_: Set z,
       z ∈ PX ↔ (z ⊂ X) := by {
   let px := Diff U (Dom ((RelInv E) ∩ (U ✕ (Diff U X))));
   let px_def := Diff_def U (Dom ((RelInv E) ∩ (U ✕ (Diff U X))));
@@ -164,17 +164,28 @@ noncomputable def PowerClass_mk (X : Class) : Class :=
 noncomputable instance : HasPow Class where
   Pow := PowerClass_mk
 noncomputable def PowerClass_def (X : Class):
-  ∀z: Class,
+  ∀z: Class, ∀_: Set z,
     z ∈ 𝒫 X ↔ (z ⊂ X) :=
   choose_spec (PowerClassExists X)
 def isPowerClass (PX : Class) :=
-  ∃(X: Class) ,∀(Y: Class), Y ∈ PX ↔ Y ⊂ X
+  ∃(X: Class), ∀(Y: Class), ∀(_: Set Y), Y ∈ PX ↔ Y ⊂ X
 class PowerClass (PX : Class) where
   isPowerClass: isPowerClass PX
 
-theorem PowerClass_def'_is_PowerClass:
+theorem PowerClass_def'_is_PowerClass {X: Class}:
   isPowerClass (𝒫 X) := ⟨X, PowerClass_def X⟩
 
 theorem UnivIsClosedPowerSet:
-  U ＝ 𝒫 U := sorry
+  U ＝ 𝒫 U := by {
+  rw [AxiomExtensionality];
+  intro z;
+  apply Iff.intro;
+  {
+    intro h;
+    rw [PowerClass_def U z (Set.mk₁ h)];
+    exact AllSetSubsetU z;
+  }
+  {exact fun h => (Set.mk₁ h).2;}
+
+}
 
