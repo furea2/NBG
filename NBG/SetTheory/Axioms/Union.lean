@@ -5,14 +5,14 @@ open Classical
 
 -- 11. AxiomUnion
 axiom AxiomUnion:
-  ∀x: Class, (x ∈ U) → ∃Z: Class,
+  ∀x: Class, (Set x) → ∃Z: Class,
     (Z ∈ U) ∧ (∀z: Class, z∈Z ↔ (∃y: Class, y∈x → z∈y))
 
 noncomputable def UnionSet_mk (x: Class) [hx: Set x]: Class :=
-  choose (AxiomUnion x hx.2)
+  choose (AxiomUnion x hx)
 noncomputable def UnionSet_def (x: Class) [hx: Set x]:
   ((UnionSet_mk x) ∈ U) ∧ (∀z: Class, z ∈ (UnionSet_mk x) ↔ (∃y: Class, y∈x → z∈y)) :=
-  choose_spec (AxiomUnion x hx.2)
+  choose_spec (AxiomUnion x hx)
 
 -- theorem ImpIffNotImpNot {p q : Prop} : (p → q) ↔ (¬ q → ¬ p) := sorry
 -- theorem IffIffNotIffNot {p q : Prop} : (p ↔ q) ↔ (¬ q ↔ ¬ p) := sorry

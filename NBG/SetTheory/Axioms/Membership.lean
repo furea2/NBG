@@ -8,26 +8,48 @@ axiom AxiomMembership :
   ∃E: Class,
     ∀x y: Class, ∃_: Set x, ∃_: Set y,
       (＜x, y＞ ∈ E ↔ x∈y)
+
+-- class E
 noncomputable def E: Class := choose AxiomMembership
 noncomputable def E_def:
   ∀x y: Class, ∃_: Set x, ∃_: Set y,
     (＜x, y＞ ∈ E ↔ x∈y) :=
   choose_spec AxiomMembership
+
 theorem DomEEqUniv : (Dom E) ＝ U := sorry
+
+-- Image type
+theorem ImageClassExists (R X: Class) [Relation R]:
+  ∃Im: Class, ∀y: Class, ∃_: Set y,
+    ((y ∈ Im)
+      ↔ (∃x: Class, ∃(hx:x ∈ X), ((@OrdPair_mk x y (Set.mk₁ hx) _)∈ R))) := by {
+  sorry;
+}
+
+theorem PreImageClassExists (R X: Class) [Relation R]:
+  ∃PreIm: Class, ∀y: Class, ∃_: Set y,
+    ((y ∈ PreIm)
+      ↔ (∃x: Class, ∃(hx:x ∈ X), ((@OrdPair_mk x y (Set.mk₁ hx) _)∈ (RelInv R)))) :=
+  @ImageClassExists (RelInv R) X ⟨RelInvRelationIsRelation⟩
+
+
+-- notation " Im "  => 
+
+-- Function type
 def isFunction (F : Class) [Relation F] : Prop :=
   ∀x x' y y': Class, ∃_: Set x, ∃_: Set x', ∃_: Set y, ∃_: Set y',
     ＜x, y＞ ∈ F → ＜x', y'＞ ∈ F → x ＝x' → y ＝ y'
 class Function (F : Class) extends Relation F where
   isFunction : isFunction F
--- noncomputable def Apply (F: Class) (x: Class) [Set x] {h: x ∈ (Dom F)} : Class := by {
---   exact (choose ((Dom_def F x x.2.2).1 h)).1;
--- }
--- noncomputable def ApplySet (F: Class) (x: SetType) {h: x.1 ∈ (Dom F)} : SetType := by {
---   exact choose ((Dom_def F x.1 x.2.2).1 h);
--- }
--- noncomputable def ApplySet_def (F: Class) (x: SetType) {h: x.1 ∈ (Dom F)}:
---   ＜x, (@ApplySet F x h)＞c ∈ F :=
---   choose_spec ((Dom_def F x.1 x.2.2).1 h)
+
+noncomputable def Apply (F x: Class) [hx: Set x] {h: x ∈ (Dom F)} : Class :=
+  choose ((Dom_def F x hx).1 h)
+noncomputable def TargetIsSet (F x: Class) [hx: Set x] {h: x ∈ (Dom F)} : Set (@Apply F x _ h) :=
+  choose (choose_spec ((Dom_def F x hx).1 h))
+noncomputable def Apply_def (F x: Class) [hx: Set x] {h: x ∈ (Dom F)}:
+  (@OrdPair_mk x (@Apply F x _ h) _ (TargetIsSet _ _)) ∈ F :=
+  choose_spec (choose_spec ((Dom_def F x hx).1 h))
+
 
 -- theorem ApplyFunctionUniqueTarget (F: Class) (x x': SetType)
 --     {hx: x.1 ∈ (Dom F)} {hx': x'.1 ∈ (Dom F)} [hF: Function F]:

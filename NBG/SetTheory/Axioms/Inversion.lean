@@ -6,37 +6,18 @@ open Classical
 -- 6. AxiomInversion
 axiom AxiomInversion :
   ∀X: Class, ∃Y: Class,
-    ∀x y: Class, ∀_: Set x, ∀_: Set y,
-      ((∃u: Class, ((u ＝ ＜x, y＞) ∧ u ∈ X)) ↔ (＜y, x＞) ∈ Y)
+    ∀z: Class, (z ∈ Y)
+      ↔ (∃x y: Class, ∃_: Set x, ∃_: Set y, ∃_:＜x,y＞ ∈ X,
+        (z ＝ (＜y, x＞)))
 
--- Todo..
-theorem RelInvExists (R: Class) [hR: Relation R]:
+theorem RelInvExists (R: Class):
   ∃RelInv_R: Class,
     ∀z: Class, (z ∈ RelInv_R)
       ↔ (∃x y: Class, ∃_: Set x, ∃_: Set y, ∃_:＜x,y＞ ∈ R,
-        (z ＝ (＜y, x＞))) := by {
-  let RelInv_R := choose (AxiomInversion R);
-  have RelInv_R_def := choose_spec (AxiomInversion R);
-  have rel_def := hR.1;
-  exists RelInv_R;
-  intro z;
-  apply Iff.intro;
-  {
-    intro h;
-    have := hR.1 z;
-    -- rw [hR.1];
-    sorry;
-  }
-  {
-    intro ⟨x, y, hx, hy, hsub, heq⟩;
-    have rel_def := (hR.1 z).2 ⟨y, ⟨x, ⟨hy, hx, heq⟩⟩⟩;
-
-    sorry;
-  }
-}
-noncomputable def RelInv (R: Class) [Relation R]: Class :=
+        (z ＝ (＜y, x＞))) := AxiomInversion R
+noncomputable def RelInv (R: Class): Class :=
   choose (RelInvExists R)
-noncomputable def RelInv_def (R: Class) [Relation R]:
+noncomputable def RelInv_def (R: Class):
   ∀z: Class, (z ∈ RelInv R)
     ↔ (∃x y: Class, ∃_: Set x, ∃_: Set y, ∃_:＜x,y＞ ∈ R,
         (z ＝ (＜y, x＞))) :=
@@ -61,7 +42,7 @@ theorem RelInvRelationIsRelation {R: Class} [hR: Relation R]:
 }
 
 theorem RelIffRelInRelInv (R: Class) [hR: Relation R]:
-  (R ＝ @RelInv (RelInv R) ⟨RelInvRelationIsRelation⟩) := by {
+  (R ＝ RelInv (RelInv R)) := by {
   rw [AxiomExtensionality];
   intro z;
   have rel_inv_def := fun z => (@RelInvRelationIsRelation R hR z);
@@ -69,5 +50,15 @@ theorem RelIffRelInRelInv (R: Class) [hR: Relation R]:
     (@RelInvRelationIsRelation (RelInv R) ⟨rel_inv_def⟩ z);
   rw [rel_inv_inv_def, hR.1];
   exact Iff.rfl;
+}
+
+theorem IsRelIffRelIffRelInRelInv (R: Class):
+  isRelation R ↔ (R ＝ RelInv (RelInv R)) := by {
+  apply Iff.intro;
+  {exact fun h => @RelIffRelInRelInv R ⟨h⟩}
+  {
+    intro h;
+    sorry;
+  }
 }
 

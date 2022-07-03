@@ -58,7 +58,7 @@ theorem UnivIsProper:
       have U'_in_U : (Singleton_mk U) ∈ U :=
         sorry;
         -- (Singleton_def U).2.2 (Singleton_mk U);
-      have ⟨B, ⟨hB1, hB2⟩⟩ := AxiomFoundation (Singleton_mk U) U'_in_U hE;
+      have ⟨B, ⟨hB1, hB2⟩⟩ := AxiomFoundation (Singleton_mk U) (Set.mk₂ U'_in_U) hE;
       rw [U'_def, AxiomExtensionality] at hB1;
       rw [←hB1] at hz;
       exact (hB2 z) hz;
