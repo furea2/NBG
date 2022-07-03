@@ -25,6 +25,13 @@ theorem ImageClassExists (R X: Class) [Relation R]:
       ↔ (∃x: Class, ∃(hx:x ∈ X), ((@OrdPair_mk x y (Set.mk₁ hx) _)∈ R))) := by {
   sorry;
 }
+noncomputable def Im (R X: Class) [Relation R]: Class :=
+  choose (ImageClassExists R X)
+noncomputable def ImageClass_def (R X: Class) [Relation R]:
+  ∀y: Class, ∃_: Set y,
+      ((y ∈ (Im R X))
+        ↔ (∃x: Class, ∃(hx:x ∈ X), ((@OrdPair_mk x y (Set.mk₁ hx) _)∈ R))) :=
+  choose_spec (ImageClassExists R X)
 
 theorem PreImageClassExists (R X: Class) [Relation R]:
   ∃PreIm: Class, ∀y: Class, ∃_: Set y,
@@ -33,11 +40,9 @@ theorem PreImageClassExists (R X: Class) [Relation R]:
   @ImageClassExists (RelInv R) X ⟨RelInvRelationIsRelation⟩
 
 
--- notation " Im "  => 
-
 -- Function type
 def isFunction (F : Class) [Relation F] : Prop :=
-  ∀x x' y y': Class, ∃_: Set x, ∃_: Set x', ∃_: Set y, ∃_: Set y',
+  ∀x x' y y': Class, ∀_: Set x, ∀_: Set x', ∀_: Set y, ∀_: Set y',
     ＜x, y＞ ∈ F → ＜x', y'＞ ∈ F → x ＝x' → y ＝ y'
 class Function (F : Class) extends Relation F where
   isFunction : isFunction F
@@ -50,51 +55,68 @@ noncomputable def Apply_def (F x: Class) [hx: Set x] {h: x ∈ (Dom F)}:
   (@OrdPair_mk x (@Apply F x _ h) _ (TargetIsSet _ _)) ∈ F :=
   choose_spec (choose_spec ((Dom_def F x hx).1 h))
 
+theorem ApplyFunctionUniqueTarget (F x x': Class) [set_x:Set x] [set_x':Set x']
+    {hx: x ∈ (Dom F)} {hx': x' ∈ (Dom F)} [hF: Function F]:
+      x ＝ x' →  @Apply F x set_x hx ＝ @Apply F x' set_x' hx' := by {
+  let y := @Apply F x set_x hx;
+  let y' := @Apply F x' set_x' hx';
+  have set_y: Set y := @TargetIsSet F x set_x hx;
+  have set_y': Set y' := @TargetIsSet F x' set_x' hx';
+  have F_def: ＜x, y＞ ∈ F → ＜x', y'＞ ∈ F
+    → x ＝ x' → y ＝ y' :=
+    hF.2 x x' y y' set_x set_x' set_y set_y';
+  have hxy: ＜x, y＞ ∈ F := @Apply_def F x set_x hx;
+  have hxy': ＜x', y'＞ ∈ F := @Apply_def F x' set_x' hx';
+  exact fun h => F_def hxy hxy' h;
+}
 
--- theorem ApplyFunctionUniqueTarget (F: Class) (x x': SetType)
---     {hx: x.1 ∈ (Dom F)} {hx': x'.1 ∈ (Dom F)} [hF: Function F]:
---       x.1 ＝ x'.1 →  @Apply F x hx ＝ @Apply F x' hx' := by {
+-- define useful notation
+noncomputable def as_map (F : Class) [Relation F]: (x: Class) → {_: x ∈ Dom F} → Class := by
+exact fun x hx => @Apply F x (Set.mk₁ hx) hx
+notation F"【"x"】" => as_map F x
 
---   let y := @ApplySet F x hx;
---   let y' := @ApplySet F x' hx';
---   have F_def: ＜x, y＞c ∈ F → ＜x', y'＞c ∈ F
---     → x.1 ＝ x'.1 → y.1 ＝ y'.1 :=
---     hF.2 x x' y y';
---   have hxy := @ApplySet_def F x hx;
---   have hx'y' := @ApplySet_def F x' hx';
---   exact fun h => F_def hxy hx'y' h;
--- }
+-- injective, surjective, bijective
 
-noncomputable def UnionAll (X : Class) :=
+-- Todo
+
+
+-- restriction
+noncomputable def Restriction (F X: Class) := F ∩ (X ✕ U)
+infix:50 " ↾ "  => Restriction
+
+-- UnionAll
+noncomputable def UnionAll_mk' (X : Class) :=
   Dom (E ∩ (U ✕ X))
 noncomputable instance : HasUnionAll Class where
-  UnionAll := UnionAll
+  UnionAll := UnionAll_mk'
 
-noncomputable def InterAll (X : Class) :=
+-- InterAll
+noncomputable def InterAll_mk' (X : Class) :=
   Diff U (Dom ((Diff U₂ E) ∩ (U ✕ X)))
 noncomputable instance : HasInterAll Class where
-  InterAll := InterAll
-noncomputable def PowerClass' (X : Class) : Class := by
-  sorry;
-  -- Diff U (Dom ((RelInv E) ∩ (U ✕ (Diff U X))))
-noncomputable def PowerClass_def' (X : Class) : Prop := by
-  sorry;
-  -- Diff_def U (Dom ((RelInv E) ∩ (U ✕ (Diff U X))))
+  InterAll := InterAll_mk'
+
+-- PowerClass
+noncomputable def PowerClass_mk' (X : Class) : Class :=
+  Diff U (Dom ((RelInv E) ∩ (U ✕ (Diff U X))))
+noncomputable def PowerClass_def' (X : Class) :=
+  Diff_def U (Dom ((RelInv E) ∩ (U ✕ (Diff U X))))
+
 def isPowerClass (PX : Class) :=
   ∃(X: Class) ,∀(Y: Class), Y ∈ PX ↔ Y ⊂ X
 class PowerClass (PX : Class) where
   isPowerClass: isPowerClass PX
 
-private theorem ImpIffNotImpNot {p q: Prop}: (p → q) ↔ (¬ q → ¬ p):= sorry
-private theorem IffIffNotIffNot {p q: Prop}: (p ↔ q) ↔ (¬ q ↔ ¬ p):= sorry
-private theorem NotExIffAllNot {α: Type u} {p: α → Prop}:
-  ¬ (∃(x : α), p x) ↔ (∀(y: α), ¬ p y) := sorry
-private theorem NotJoinIffNotUnionNot {X Y: Class}:
-  ∀(z: Class), (¬ (z ∈ (X ∩ Y)) ↔ (¬ z ∈ X) ∨ (¬ z ∈ Y)) := sorry
-private theorem NotNotIff {p: Prop}: p ↔ ¬ ¬ p:= sorry
+-- private theorem ImpIffNotImpNot {p q: Prop}: (p → q) ↔ (¬ q → ¬ p):= sorry
+-- private theorem IffIffNotIffNot {p q: Prop}: (p ↔ q) ↔ (¬ q ↔ ¬ p):= sorry
+-- private theorem NotExIffAllNot {α: Type u} {p: α → Prop}:
+--   ¬ (∃(x : α), p x) ↔ (∀(y: α), ¬ p y) := sorry
+-- private theorem NotJoinIffNotUnionNot {X Y: Class}:
+--   ∀(z: Class), (¬ (z ∈ (X ∩ Y)) ↔ (¬ z ∈ X) ∨ (¬ z ∈ Y)) := sorry
+-- private theorem NotNotIff {p: Prop}: p ↔ ¬ ¬ p:= sorry
 
 theorem PowerClass_def'_is_PowerClass:
-  isPowerClass (PowerClass' X) := by {
+  isPowerClass (PowerClass_mk' X) := by {
 --   exists X;
 --   intro Y;
 --   apply Iff.intro;
@@ -150,7 +172,7 @@ theorem PowerClass_def'_is_PowerClass:
 }
 
 noncomputable instance : HasPow Class where
-  Pow := PowerClass'
+  Pow := PowerClass_mk'
 
 theorem UnivIsClosedPowerSet:
   U ＝ 𝒫 U := sorry
