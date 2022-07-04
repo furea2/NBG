@@ -46,8 +46,6 @@ noncomputable def Singleton_is_Set (X: Class) [Set X]: Set (Singleton_mk X) :=
 
 notation "{"x"}" => Singleton_mk x
 notation "{"x","y"}" => Pair_mk x y
-notation "{"x"}s" => Singleton_is_Set x
-notation "{"x","y"}s" => Pair_is_Set x y
 
 def isSingleton (X : Class) :=
   ∃x: Class, ∀u: Class, u∈X ↔ u＝x
@@ -60,24 +58,22 @@ class Pair (X : Class) :=
 
 -- ordered pair
 noncomputable def OrdPair_mk (X Y: Class) [Set X] [Set Y] : Class :=
-  @Pair_mk {X} {X, Y} {X}s {X, Y}s
+  @Pair_mk {X} {X, Y} (Singleton_is_Set X) (Pair_is_Set X Y)
 noncomputable def OrdPair_def (X Y: Class) [Set X] [Set Y] :=
-  @Pair_def {X} {X, Y} {X}s {X, Y}s
+  @Pair_def {X} {X, Y} (Singleton_is_Set X) (Pair_is_Set X Y)
 noncomputable def OrdPair_is_Set (X Y: Class) [Set X] [Set Y] : Set (OrdPair_mk X Y) :=
-  @Pair_is_Set {X} {X, Y} {X}s {X, Y}s
+  @Pair_is_Set {X} {X, Y} (Singleton_is_Set X) (Pair_is_Set X Y)
 notation "＜"x","y"＞" => OrdPair_mk x y
-notation "＜"x","y"＞s" => OrdPair_is_Set x y
 
 noncomputable def OrdTriple_mk (X Y Z: Class) [Set X] [Set Y] [Set Z] : Class :=
-  @OrdPair_mk ＜X, Y＞ Z ＜X, Y＞s _
+  @OrdPair_mk ＜X, Y＞ Z (OrdPair_is_Set X Y) _
 noncomputable def OrdTriple_def (X Y Z: Class) [Set X] [Set Y] [Set Z] :=
-  @OrdPair_def ＜X, Y＞ Z ＜X, Y＞s _
+  @OrdPair_def ＜X, Y＞ Z (OrdPair_is_Set X Y) _
 noncomputable def OrdTriple_is_Set (X Y Z: Class) [Set X] [Set Y] [Set Z]: Set (OrdTriple_mk X Y Z) :=
-  @OrdPair_is_Set ＜X, Y＞ Z ＜X, Y＞s _
+  @OrdPair_is_Set ＜X, Y＞ Z (OrdPair_is_Set X Y) _
 
 -- ordered triple
 notation "＜"x","y","z"＞" => OrdTriple_mk x y z
-notation "＜"x","y","z"＞s" => OrdTriple_is_Set x y z
 
 -- singleton
 theorem SingletonIntro (x: Class) [Set x]:
@@ -179,7 +175,7 @@ theorem SingletonPair {x y z: Class} [Set x] [Set y] [Set z]:
 -- -- ordered pair
 theorem OrdPairIntro (x y: Class) [Set x] [Set y]:
   ∀u: Class, (u∈＜x, y＞ ↔ (u ＝ {x} ∨ u ＝ {x,y})) :=
-  fun u => (@Pair_def {x} {x,y} {x}s {x,y}s).2 u
+  fun u => (@Pair_def {x} {x,y} (Singleton_is_Set x) (Pair_is_Set x y)).2 u
 
 theorem OrdPairEq₁ {x y u v: Class} [Set x] [Set y] [Set u] [Set v]:
   (x ＝ u) →  (y ＝ v) → (＜x,y＞ ＝ ＜u,v＞) := by {
@@ -338,8 +334,8 @@ theorem OrdPairEq {x y u v: Class} [Set x] [Set y] [Set u] [Set v]:
 
 theorem OrdTripleSetEq (x y z u v w: Class) [Set x] [Set y] [Set z] [Set u] [Set v] [Set w]:
   (＜x,y,z＞ ＝ ＜u,v,w＞) ↔ (x ＝ u ∧ y ＝ v ∧ z ＝ w) := by {
-  have hxy := ＜x, y＞s;
-  have huv := ＜u, v＞s;
+  have hxy := OrdPair_is_Set x y;
+  have huv := OrdPair_is_Set u v;
   have h1 := @OrdPairEq ＜x, y＞ z ＜u,v＞ w;
   have h2 := @OrdPairEq x y u v;
   apply Iff.trans h1;
