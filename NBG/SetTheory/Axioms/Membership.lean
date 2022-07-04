@@ -83,14 +83,6 @@ theorem PreImageClassExists (R X: Class) [Relation R]:
   @ImageClassExists (RelInv R) X ⟨RelInvRelationIsRelation⟩
 
 
--- Function type
-def isFunction (F : Class) [Relation F] : Prop :=
-  ∀x x' y y': Class, ∀_: Set x, ∀_: Set x', ∀_: Set y, ∀_: Set y',
-    ＜x, y＞ ∈ F → ＜x', y'＞ ∈ F → x ＝x' → y ＝ y'
-class Function (F : Class) extends Relation F where
-  isFunction : isFunction F
-
-
 noncomputable def Apply (F x: Class) [hx: Set x] {h: x ∈ (Dom F)} : Class :=
   choose ((Dom_def F x hx).1 h)
 noncomputable def TargetIsSet (F x: Class) [hx: Set x] {h: x ∈ (Dom F)} : Set (@Apply F x _ h) :=

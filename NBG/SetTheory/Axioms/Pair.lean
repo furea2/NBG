@@ -1,17 +1,17 @@
 import NBG.SetTheory.Defs
-import NBG.SetTheory.Axioms.Differrence
+import NBG.SetTheory.Axioms.Difference
 
 open Classical
 
 -- 4. AxiomPair
 axiom AxiomPair :
-  ∀x y: Class, x ∈ U → y ∈ U
+  ∀x y: Class, Set x → Set y
     → ∃z: Class,
       (z∈U) ∧ (∀u: Class, (u∈z ↔ (u ＝ x ∨ u ＝ y)))
 noncomputable def Pair_mk (X Y: Class) [hx: Set X] [hy: Set Y] : Class :=
-  choose (AxiomPair X Y hx.2 hy.2)
+  choose (AxiomPair X Y hx hy)
 noncomputable def Pair_def (X Y: Class) [hx: Set X] [hy: Set Y] :=
-  choose_spec (AxiomPair X Y hx.2 hy.2)
+  choose_spec (AxiomPair X Y hx hy)
 noncomputable def Pair_is_Set (X Y: Class) [Set X] [Set Y] : Set (Pair_mk X Y) :=
   Set.mk₂ (Pair_def X Y).1
 

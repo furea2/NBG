@@ -1,6 +1,6 @@
 import NBG.SetTheory.Axioms.Extensionality
 import NBG.SetTheory.Axioms.Universe
-import NBG.SetTheory.Axioms.Differrence
+import NBG.SetTheory.Axioms.Difference
 import NBG.SetTheory.Axioms.Pair
 import NBG.SetTheory.Axioms.Product
 import NBG.SetTheory.Axioms.Inversion

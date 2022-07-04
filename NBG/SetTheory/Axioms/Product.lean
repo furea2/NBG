@@ -28,9 +28,16 @@ theorem SetProductIsSet (x y : Class) [Set x] [Set y]: isSet (x ✕ y) :=
 noncomputable def SetProductSet (x y : Class) [Set x] [Set y] : Set (x ✕ y) :=
   Set.mk (SetProductIsSet x y) (AllSetInU.1 (SetProductIsSet x y))
 
+-- Relation type
 def isRelation (R : Class) : Prop :=
   ∀z: Class, z∈R ↔ ∃x y: Class, ∃_: Set x, ∃_: Set y,
     (z ＝ ＜x, y＞)
 class Relation (R : Class) where
   isRelation: isRelation R
 
+-- Function type
+def isFunction (F : Class) [Relation F] : Prop :=
+  ∀x x' y y': Class, ∀_: Set x, ∀_: Set x', ∀_: Set y, ∀_: Set y',
+    ＜x, y＞ ∈ F → ＜x', y'＞ ∈ F → x ＝x' → y ＝ y'
+class Function (F : Class) extends Relation F where
+  isFunction : isFunction F

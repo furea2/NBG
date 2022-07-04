@@ -10,18 +10,18 @@ axiom AxiomInversion :
       ↔ (∃x y: Class, ∃_: Set x, ∃_: Set y, ∃_:＜x,y＞ ∈ X,
         (z ＝ (＜y, x＞)))
 
-theorem RelInvExists (R: Class):
-  ∃RelInv_R: Class,
-    ∀z: Class, (z ∈ RelInv_R)
-      ↔ (∃x y: Class, ∃_: Set x, ∃_: Set y, ∃_:＜x,y＞ ∈ R,
-        (z ＝ (＜y, x＞))) := AxiomInversion R
+-- theorem RelInvExists (R: Class):
+--   ∃RelInv_R: Class,
+--     ∀z: Class, (z ∈ RelInv_R)
+--       ↔ (∃x y: Class, ∃_: Set x, ∃_: Set y, ∃_:＜x,y＞ ∈ R,
+--         (z ＝ (＜y, x＞))) := AxiomInversion R
 noncomputable def RelInv (R: Class): Class :=
-  choose (RelInvExists R)
+  choose (AxiomInversion R)
 noncomputable def RelInv_def (R: Class):
   ∀z: Class, (z ∈ RelInv R)
     ↔ (∃x y: Class, ∃_: Set x, ∃_: Set y, ∃_:＜x,y＞ ∈ R,
         (z ＝ (＜y, x＞))) :=
-  choose_spec (RelInvExists R)
+  choose_spec (AxiomInversion R)
 
 theorem RelInvRelationIsRelation {R: Class} [hR: Relation R]:
   isRelation (RelInv R) := by {

@@ -3,15 +3,15 @@ import NBG.SetTheory.Axioms.Universe
 
 open Classical
 
--- 3. AxiomDifferrence
-axiom AxiomDifferrence :
+-- 3. AxiomDifference
+axiom AxiomDifference :
   ∀X Y: Class, ∃Z: Class,
     ∀u: Class, (u∈Z ↔ (u ∈ X ∧ u ∉ Y))
 noncomputable def Diff (X Y: Class): Class :=
-  choose (AxiomDifferrence X Y)
+  choose (AxiomDifference X Y)
 noncomputable def Diff_def (X Y: Class):
   ∀u: Class, (u ∈ (Diff X Y) ↔ (u ∈ X ∧ u ∉ Y)) :=
-  choose_spec (AxiomDifferrence X Y)
+  choose_spec (AxiomDifference X Y)
 noncomputable instance : HasDiff Class where
   Diff := Diff
 
@@ -27,10 +27,10 @@ theorem IntersectionClassExists:
   exists inter;
   have inter_def:
     ∀u: Class, (u ∈ inter ↔ (u ∈ X ∧ u ∉ (X ＼ Y))) :=
-    choose_spec (AxiomDifferrence X (X ＼ Y));
+    choose_spec (AxiomDifference X (X ＼ Y));
   have diff_def:
     ∀u: Class, (u ∈ (X ＼ Y) ↔ (u ∈ X ∧ u ∉ Y)) :=
-    choose_spec (AxiomDifferrence X Y);
+    choose_spec (AxiomDifference X Y);
   sorry;
 }
 noncomputable def IntersectionClass_mk (X Y: Class) :=
@@ -59,16 +59,16 @@ theorem UnionClassExists:
   exists union;
   have union_def:
     ∀u: Class, (u ∈ union ↔ (u ∈ U ∧ u ∉ ((U ＼ X) ∩ (U ＼ Y)))) :=
-    choose_spec (AxiomDifferrence U ((U ＼ X) ∩ (U ＼ Y)));
+    choose_spec (AxiomDifference U ((U ＼ X) ∩ (U ＼ Y)));
   have inter_def:
     ∀u: Class, (u ∈ ((U ＼ X) ∩ (U ＼ Y)) ↔ (u ∈ (U ＼ X) ∧ u ∈ (U ＼ Y))) :=
     choose_spec (IntersectionClassExists (U ＼ X) (U ＼ Y));
   have diff_x_def:
     ∀u: Class, (u ∈ (U ＼ X) ↔ (u ∈ U ∧ u ∉ X)) :=
-    choose_spec (AxiomDifferrence U X);
+    choose_spec (AxiomDifference U X);
   have diff_y_def:
     ∀u: Class, (u ∈ (U ＼ Y) ↔ (u ∈ U ∧ u ∉ Y)) :=
-    choose_spec (AxiomDifferrence U Y);
+    choose_spec (AxiomDifference U Y);
   sorry;
 }
 noncomputable def UnionClass_mk (X Y: Class) :=
@@ -95,7 +95,7 @@ theorem EmptyClassExists:
   let emp := EmptyClass_mk';
   exists emp;
   have emp_def: ∀u: Class, (u ∈ emp ↔ (u ∈ U ∧ u ∉ U)) :=
-    choose_spec (AxiomDifferrence U U);
+    choose_spec (AxiomDifference U U);
   exact fun z h => ((emp_def z).1 h).2 ((emp_def z).1 h).1
 }
 noncomputable def EmptyClass_mk : Class :=
