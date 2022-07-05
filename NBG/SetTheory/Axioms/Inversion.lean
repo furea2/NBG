@@ -52,13 +52,13 @@ theorem RelIffRelInRelInv (R: Class) [hR: Relation R]:
   exact Iff.rfl;
 }
 
-theorem IsRelIffRelIffRelInRelInv (R: Class):
-  isRelation R ↔ (R ＝ RelInv (RelInv R)) := by {
-  apply Iff.intro;
-  {exact fun h => @RelIffRelInRelInv R ⟨h⟩}
-  {
-    intro h;
-    sorry;
-  }
-}
+-- theorem IsRelIffRelIffRelInRelInv (R: Class):
+--   isRelation R ↔ (R ＝ RelInv (RelInv R)) := by {
+--   apply Iff.intro;
+--   {exact fun h => @RelIffRelInRelInv R ⟨h⟩}
+--   {
+--     intro h;
+--     sorry;
+--   }
+-- }
 

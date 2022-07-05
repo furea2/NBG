@@ -120,28 +120,28 @@ theorem NonEmptyClassIsNotEmpty {X : Class}:
   isNonEmptyClass X → ¬ isEmptyClass X :=
   fun ⟨z, h1⟩ h2 => (h2 z) h1
 
--- symmdiff
-noncomputable def SymmDiffClass_mk' (X Y: Class) :=
-  (X ＼ Y) ∩ (Y ＼ X)
-theorem SymmDiffClassExists (X Y: Class):
-  ∃Z:Class,
-    ∀z: Class, (z ∈ Z) ↔
-    (z ∈ (X ＼ Y)) ∧ (z ∈ (Y ＼ X)) := by {
-  sorry;
-}
-noncomputable def SymmDiffClass_mk (X Y: Class) :=
-  choose (SymmDiffClassExists X Y)
-noncomputable def SymmDiffClass_def (X Y: Class) :=
-  choose_spec (SymmDiffClassExists X Y)
-infix:50 " △ " => SymmDiffClass_mk
-theorem SymmDiffClassIntro (X Y: Class) :
-  ∀z: Class, (z ∈ (X △ Y)) ↔
-    (z ∈ (X ＼ Y)) ∧ (z ∈ (Y ＼ X)) :=
-  SymmDiffClass_def X Y
-def isSymmDiffClass {X Y: Class} (Z: Class) :=
-  ∀z: Class, (z ∈ Z) ↔ (z ∈ (X ＼ Y) ∧ z ∈ (Y ＼ X))
-class SymmDiffClass {X Y: Class} (I : Class) where
-  isSymmDiffClass: (@isSymmDiffClass X Y I)
+-- -- symmdiff
+-- noncomputable def SymmDiffClass_mk' (X Y: Class) :=
+--   (X ＼ Y) ∩ (Y ＼ X)
+-- theorem SymmDiffClassExists (X Y: Class):
+--   ∃Z:Class,
+--     ∀z: Class, (z ∈ Z) ↔
+--     (z ∈ (X ＼ Y)) ∧ (z ∈ (Y ＼ X)) := by {
+--   sorry;
+-- }
+-- noncomputable def SymmDiffClass_mk (X Y: Class) :=
+--   choose (SymmDiffClassExists X Y)
+-- noncomputable def SymmDiffClass_def (X Y: Class) :=
+--   choose_spec (SymmDiffClassExists X Y)
+-- infix:50 " △ " => SymmDiffClass_mk
+-- theorem SymmDiffClassIntro (X Y: Class) :
+--   ∀z: Class, (z ∈ (X △ Y)) ↔
+--     (z ∈ (X ＼ Y)) ∧ (z ∈ (Y ＼ X)) :=
+--   SymmDiffClass_def X Y
+-- def isSymmDiffClass {X Y: Class} (Z: Class) :=
+--   ∀z: Class, (z ∈ Z) ↔ (z ∈ (X ＼ Y) ∧ z ∈ (Y ＼ X))
+-- class SymmDiffClass {X Y: Class} (I : Class) where
+--   isSymmDiffClass: (@isSymmDiffClass X Y I)
 
 
 -- empty class property

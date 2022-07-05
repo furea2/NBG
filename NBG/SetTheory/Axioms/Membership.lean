@@ -16,7 +16,7 @@ noncomputable def E_def:
     (＜x, y＞ ∈ E ↔ x∈y) :=
   choose_spec AxiomMembership
 
-theorem DomEEqUniv : (Dom E) ＝ U := sorry
+-- theorem DomEEqUniv : (Dom E) ＝ U := sorry
 
 -- Image type
 theorem ImageClassExists (R X: Class) [hR: Relation R]:
@@ -111,11 +111,11 @@ noncomputable def as_map (F : Class) [Relation F]: (x: Class) → {_: x ∈ Dom 
 exact fun x hx => @Apply F x (Set.mk₁ hx) hx
 notation F"【"x"】" => as_map F x
 
-/-- The brige theorem of image and function, namely f[X] = {f(x)}. -/
-theorem SingleSetFunctionImageIsSingleton (F x: Class) [hx: Set x] {h: x ∈ (Dom F)} [hF: Function F]:
-  Im F x ＝ @Singleton_mk (@as_map F hF.1 x h) (TargetIsSet F x) := by {
-  sorry;
-}
+-- /-- The brige theorem of image and function, namely f[X] = {f(x)}. -/
+-- theorem SingleSetFunctionImageIsSingleton (F x: Class) [hx: Set x] {h: x ∈ (Dom F)} [hF: Function F]:
+--   Im F x ＝ @Singleton_mk (@as_map F hF.1 x h) (TargetIsSet F x) := by {
+--   sorry;
+-- }
 
 -- injective, surjective, bijective
 

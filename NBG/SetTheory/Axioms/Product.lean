@@ -23,10 +23,10 @@ noncomputable def U₃ := ProductClass_mk U₂ U
 
 
 
-theorem SetProductIsSet (x y : Class) [Set x] [Set y]: isSet (x ✕ y) :=
-  sorry
-noncomputable def SetProductSet (x y : Class) [Set x] [Set y] : Set (x ✕ y) :=
-  Set.mk (SetProductIsSet x y) (AllSetInU.1 (SetProductIsSet x y))
+-- theorem SetProductIsSet (x y : Class) [Set x] [Set y]: isSet (x ✕ y) :=
+--   sorry
+-- noncomputable def SetProductSet (x y : Class) [Set x] [Set y] : Set (x ✕ y) :=
+--   Set.mk (SetProductIsSet x y) (AllSetInU.1 (SetProductIsSet x y))
 
 -- Relation type
 def isRelation (R : Class) : Prop :=

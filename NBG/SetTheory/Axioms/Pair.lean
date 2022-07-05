@@ -332,7 +332,7 @@ theorem OrdPairEq {x y u v: Class} [Set x] [Set y] [Set u] [Set v]:
   {exact fun h => OrdPairEq₁ h.1 h.2;}
 }
 
-theorem OrdTripleSetEq (x y z u v w: Class) [Set x] [Set y] [Set z] [Set u] [Set v] [Set w]:
+theorem OrdTripleEq {x y z u v w: Class} [Set x] [Set y] [Set z] [Set u] [Set v] [Set w]:
   (＜x,y,z＞ ＝ ＜u,v,w＞) ↔ (x ＝ u ∧ y ＝ v ∧ z ＝ w) := by {
   have hxy := OrdPair_is_Set x y;
   have huv := OrdPair_is_Set u v;
