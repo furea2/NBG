@@ -1,4 +1,4 @@
-import NBG.Init.Notations
+import NBG.Init.Base
 
 universe u
 

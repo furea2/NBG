@@ -50,11 +50,11 @@ theorem LeftCycleClassExists:
 
 noncomputable def RightCycleClass (X: Class): Class :=
   choose (AxiomCycle X)
-noncomputable def RightCycleClass_mk (X: Class) :=
+noncomputable def RightCycleClass_def (X: Class) :=
   choose_spec (AxiomCycle X)
 noncomputable def LeftCycleClass (X: Class): Class :=
   choose (LeftCycleClassExists X)
-noncomputable def LeftCycleClass_mk (X: Class) :=
+noncomputable def LeftCycleClass_def (X: Class) :=
   choose_spec (LeftCycleClassExists X)
 
 notation " ↻ " X => RightCycleClass X

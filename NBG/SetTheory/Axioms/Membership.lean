@@ -5,15 +5,18 @@ open Classical
 
 -- 8. AxiomMembership
 axiom AxiomMembership :
-  ∃E: Class,
-    ∀x y: Class, ∀_: Set x, ∀_: Set y,
-      (＜x, y＞ ∈ E ↔ x∈y)
+  ∃E: Class, ∀z: Class,
+    (z ∈ E ↔ ∃x y: Class, ∃_: Set x, ∃_: Set y,
+      ∃_:＜x, y＞ ∈ E, ∃_:x ∈ y,
+        z ＝ ＜x, y＞)
 
 -- class E
 noncomputable def E: Class := choose AxiomMembership
 noncomputable def E_def:
-  ∀x y: Class, ∀_: Set x, ∀_: Set y,
-    (＜x, y＞ ∈ E ↔ x∈y) :=
+  ∀z: Class,
+    (z ∈ E ↔ ∃x y: Class, ∃_: Set x, ∃_: Set y,
+      ∃_:＜x, y＞ ∈ E, ∃_:x ∈ y,
+        z ＝ ＜x, y＞) :=
   choose_spec AxiomMembership
 
 -- theorem DomEEqUniv : (Dom E) ＝ U := sorry

@@ -9,11 +9,11 @@ axiom AxiomDifference :
     ∀u: Class, (u∈Z ↔ (u ∈ X ∧ u ∉ Y))
 noncomputable def Diff (X Y: Class): Class :=
   choose (AxiomDifference X Y)
-noncomputable def Diff_def (X Y: Class):
-  ∀u: Class, (u ∈ (Diff X Y) ↔ (u ∈ X ∧ u ∉ Y)) :=
-  choose_spec (AxiomDifference X Y)
 noncomputable instance : HasDiff Class where
   Diff := Diff
+noncomputable def Diff_def (X Y: Class):
+  ∀u: Class, (u ∈ (X ＼ Y) ↔ (u ∈ X ∧ u ∉ Y)) :=
+  choose_spec (AxiomDifference X Y)
 
 
 -- intersection

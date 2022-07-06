@@ -10,12 +10,12 @@ axiom AxiomProduct :
       (z ＝ (@OrdPair_mk x y (Set.mk₁ hx) (Set.mk₁ hy))))
 noncomputable def ProductClass_mk (X Y: Class) : Class :=
   choose (AxiomProduct X Y)
+noncomputable instance : HasProduct Class where
+  Product := ProductClass_mk
 noncomputable def ProductClass_def (X Y: Class):
   ∀z: Class, (z ∈ (ProductClass_mk X Y) ↔ ∃x y: Class, ∃hx: x ∈ X,∃hy: y ∈ Y,
     (z ＝ (@OrdPair_mk x y (Set.mk₁ hx) (Set.mk₁ hy)))) :=
   choose_spec (AxiomProduct X Y)
-noncomputable instance : HasProduct Class where
-  Product := ProductClass_mk
 noncomputable def U₂ := ProductClass_mk U U
 noncomputable def U₃ := ProductClass_mk U₂ U
 
