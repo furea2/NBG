@@ -7,7 +7,7 @@ open Classical
 axiom AxiomMembership :
   ∃E: Class, ∀z: Class,
     (z ∈ E ↔ ∃x y: Class, ∃_: Set x, ∃_: Set y,
-      ∃_:＜x, y＞ ∈ E, ∃_:x ∈ y,
+      ∃_:x ∈ y,
         z ＝ ＜x, y＞)
 
 -- class E
@@ -15,7 +15,7 @@ noncomputable def E: Class := choose AxiomMembership
 noncomputable def E_def:
   ∀z: Class,
     (z ∈ E ↔ ∃x y: Class, ∃_: Set x, ∃_: Set y,
-      ∃_:＜x, y＞ ∈ E, ∃_:x ∈ y,
+      ∃_:x ∈ y,
         z ＝ ＜x, y＞) :=
   choose_spec AxiomMembership
 

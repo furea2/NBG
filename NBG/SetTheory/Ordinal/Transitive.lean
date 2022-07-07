@@ -16,14 +16,8 @@ noncomputable def Tr_def:
     (z∈Tr) ↔ ((z∈U) ∧ (isTransitive z)) :=
   choose_spec TrClassisExists
 
-def isInductive (X: Class) :=
-  ((ø∈X) ∧ ∀x: Class,
-    ((hn: x ∈ X) → (x ∪ (@Singleton_mk x (Set.mk₁ hn))) ∈ X))
-class Inductive (x: Class) where
-  isInductive: isInductive x
-
-theorem TrIsInductive: isInfinitySet Tr := sorry
-theorem OmegaIsInductive: isInfinitySet ω := sorry
+theorem TrIsInductive: isInductive Tr := sorry
+theorem OmegaIsInductive: isTransitive ω := sorry
 
 theorem OmegaIsInTr: ω ⊂ Tr := sorry
 theorem OmegaSubsetTr: ω ∈ Tr := sorry

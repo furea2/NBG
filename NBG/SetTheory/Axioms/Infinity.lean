@@ -10,14 +10,16 @@ axiom AxiomInfinity :
       ((hn: n ∈ x) → (n ∪ (@Singleton_mk n (Set.mk₁ hn))) ∈ x))
 
 
-def isInfinitySet (x: Class) :=
+def isInductive (x: Class) :=
   x∈U
     → ((ø∈x) ∧ ∀n: Class, (
       ((hn: n ∈ x) → (n ∪ (@Singleton_mk n (Set.mk₁ hn))) ∈ x)))
+class Inductive (x: Class) where
+  isInductive: isInductive x
 
 theorem IndClassExists:
   ∃Ind: Class, ∀x: Class,
-    (x∈Ind) ↔ (isInfinitySet x) := sorry
+    (x∈Ind) ↔ (isInductive x) := sorry
 
 noncomputable def Ind: Class := choose IndClassExists
 
