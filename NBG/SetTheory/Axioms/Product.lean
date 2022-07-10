@@ -30,7 +30,7 @@ noncomputable def U₃ := ProductClass_mk U₂ U
 
 -- Relation type
 def isRelation (R : Class) : Prop :=
-  ∀z: Class, z∈R ↔ ∃x y: Class, ∃_: Set x, ∃_: Set y,
+  ∀z: Class, z∈R → ∃x y: Class, ∃_: Set x, ∃_: Set y,
     (z ＝ ＜x, y＞)
 class Relation (R : Class) where
   isRelation: isRelation R

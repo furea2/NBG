@@ -93,8 +93,8 @@ theorem EqIffSubsetMutually (X Y : Class):
 }
 
 theorem ClassEqMenberImpMenber {x y z: Class}:
-  (x ＝ y ∧ x ∈ z) → y ∈ z :=
-  fun h => @RewiteClass (fun x => x ∈ z) x y ⟨h.1,h.2⟩
+  (x ＝ y ∧ y ∈ z) → x ∈ z :=
+  fun h => @RewiteClass (fun x => x ∈ z) y x ⟨ClassEq.symm h.1,h.2⟩
 
 
 def isUnique (p : Class → Prop) :=

@@ -22,3 +22,4 @@ def isSet (X : Class) : Prop := ∃(Y:Class), X ∈ Y
 def isProper (X : Class) : Prop := ¬ (isSet X)
 class ProperClass (X : Class) where
   isProper : isProper X
+

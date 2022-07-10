@@ -19,7 +19,46 @@ noncomputable def E_def:
         z ＝ ＜x, y＞) :=
   choose_spec AxiomMembership
 
--- theorem DomEEqUniv : (Dom E) ＝ U := sorry
+theorem EIsRelation:
+  isRelation E := by {
+  intro z h;
+  have ⟨x,y,hx,hy,_,heq⟩ := (E_def z).1 h;
+  exact ⟨x,y,hx,hy,heq⟩;
+}
+
+theorem DomEEqUniv : (Dom E) ＝ U := by {
+  rw [AxiomExtensionality];
+  intro z;
+  -- rw [Dom_def];
+  -- apply Iff.intro;
+  -- {
+  --   intro h;
+  --   -- let y := choose h;
+  --   -- have h1 := choose_spec h;
+  --   -- have set_y: Set y := choose h1;
+  --   -- have hin := choose_spec h1;
+
+  --   -- let h2 := choose_spec ((E_def _).1 hin);
+  --   -- let h3 := choose_spec h2;
+  --   -- let h4 := choose_spec h3;
+  --   -- let h5 := choose_spec h4;
+
+  --   -- let z' := choose ((E_def _).1 hin);
+  --   -- let y' := choose h2;
+  --   -- let set_z': Set z' := choose h3;
+  --   -- let set_y': Set y' := choose h4;
+  --   -- let hin': z' ∈ y' := choose h5;
+  --   -- let heq' := choose_spec h5;
+  --   -- have := OrdPairEq.1 heq';
+
+  --   sorry;
+  -- }
+  -- {
+  --   intro h;
+  --   sorry;
+  -- }
+  sorry;
+}
 
 -- Image type
 theorem ImageClassExists (R X: Class) [hR: Relation R]:
@@ -43,10 +82,11 @@ theorem ImageClassExists (R X: Class) [hR: Relation R]:
     have set_y'' := Set.mk₁ hy'';
     rw [OrdPairEq] at heq';
     rw [OrdPairEq] at heq'';
-    have heq': x'' ＝ x ∧ y ＝ y :=
-      ⟨ClassEq.trans (ClassEq.symm heq''.1) (ClassEq.symm heq'.2), ClassEq.refl y⟩;
-    have hx''_in:= (hR.1 ＜x'', y＞).2 ⟨x, y,_ ,_,OrdPairEq.2 heq'⟩;
-    exists x'', hx'';
+    have heq''': x ＝ x'' :=
+      ClassEq.trans heq'.2 heq''.1;
+    have h_x_in := ClassEqMenberImpMenber ⟨heq''',hx''⟩;
+    have h_xy_in := ClassEqMenberImpMenber ⟨OrdPairEq.2 ⟨heq'.2,heq'.1⟩,h_xy_in'.1⟩;
+    exists x, h_x_in;
   }
   {
     intro ⟨x, x_in_X, xy_in_R⟩;
@@ -150,8 +190,79 @@ theorem PowerClassExists (X : Class):
     ∀z: Class, ∀_: Set z,
       z ∈ PX ↔ (z ⊂ X) := by {
   let px := Diff U (Dom ((RelInv E) ∩ (U ✕ (Diff U X))));
-  let px_def := Diff_def U (Dom ((RelInv E) ∩ (U ✕ (Diff U X))));
-  sorry;
+  have px_def := Diff_def U (Dom ((RelInv E) ∩ (U ✕ (Diff U X))));
+  have dom_def := Dom_def ((RelInv E) ∩ (U ✕ (Diff U X)));
+  have inter_def := IntersectionClass_def (RelInv E) (U ✕ (Diff U X));
+  have rel_inv_def := RelInv_def E;
+  have prod_def := ProductClass_def U (Diff U X);
+  have diff_def := Diff_def U X;
+  have E_def := E_def;
+  exists px;
+  intro z set_z;
+  apply Iff.intro;
+  {
+    intro h u hu;
+    have set_u :=  (Set.mk₁ hu);
+    have h1 := ((px_def z).1 h);
+    have h2 := NotExistsImpForall (NotExistsImpForall ((IffIffNotIffNot.1 (dom_def z set_z)).2 h1.2) u) set_u;
+    have h3 := NotAndIffNotOrNot.1 ((IffIffNotIffNot.1 (inter_def ＜z,u＞)).2 h2);
+    cases h3;
+    case mp.inl h3 => {
+      have h4 := ImpIffNotImpNot.1 (
+        ExistsIffNotForall.1 (
+          ExistsIffNotForall.1 (
+            ExistsIffNotForall.1 (
+              ExistsIffNotForall.1 (
+                ExistsIffNotForall.1 (
+                  (IffIffNotIffNot.1 (rel_inv_def ＜z,u＞)).2 h3) u) z) set_u) set_z)) (IffNotNot.symm.2 (ClassEq.refl _));
+      have := (E_def ＜u,z＞).2;
+      have h5 := (
+        ExistsIffNotForall.1 (
+          ExistsIffNotForall.1 (
+            ExistsIffNotForall.1 (
+              ExistsIffNotForall.1 (
+                ExistsIffNotForall.1 (
+                  (IffIffNotIffNot.1 (E_def ＜u,z＞)).2 h4) u) z) set_u) set_z) hu);
+      exact False.elim (h5 (ClassEq.refl _));
+    }
+    case mp.inr h3 => {
+      have h4 := (@ImpIffNotImpNot (u ∈ Diff U X) (¬＜z,u＞ ＝ ＜z,u＞)).1 (
+        ExistsIffNotForall.1 (
+          ExistsIffNotForall.1 (
+            ExistsIffNotForall.1 (
+              ExistsIffNotForall.1 (
+                (IffIffNotIffNot.1 (prod_def ＜z,u＞)).2 h3) z) u) set_z.2)) (IffNotNot.symm.2 (ClassEq.refl _));
+      have h5 := NotAndIffNotOrNot.1 ((IffIffNotIffNot.1 (diff_def u)).2 h4);
+      cases h5;
+      case inl h5 => {exact False.elim (h5 set_u.2);}
+      case inr h5 => {exact IffNotNot.2 h5;}
+    }
+  }
+  {
+    intro h;
+    apply (px_def z).2;
+    apply And.intro;
+    {exact set_z.2;}
+    {
+      intro hn;
+      
+      have ⟨u,set_u,hin⟩ := (dom_def z set_z).1 hn;
+      have h1 := (inter_def ＜z,u＞).1 hin;
+      have ⟨u',z',set_u',set_z',hin',heq'⟩ := (rel_inv_def ＜z,u＞).1 h1.1;
+      have ⟨u'',z'',hu'',hz'',hin'',heq''⟩ := (E_def ＜u',z'＞).1 hin';
+
+      have ⟨z''',u''',hz''',hu''',heq'''⟩ := (prod_def ＜z,u＞).1 h1.2;
+      have h3 := (diff_def u''').1 hu''';
+      have heq'''' := (AxiomExtensionality z z'').1 (ClassEq.trans (OrdPairEq.1 heq').1 (OrdPairEq.1 heq'').2);
+      have _ := Set.mk₁ hu''';
+      have _ := Set.mk₁ hz''';
+      have heq''''' := ClassEq.trans (ClassEq.trans (ClassEq.symm (OrdPairEq.1 heq''').2) (OrdPairEq.1 heq').2) (OrdPairEq.1 heq'').1;
+      have := (AxiomExtensionality z z'') ;
+      have u_in_z := h u''' (ClassEqMenberImpMenber ⟨heq''''', (heq'''' u'').2 hin''⟩);
+      have u_not_in_z := h3.2;
+      contradiction;
+    }
+  }
 }
 
 noncomputable def PowerClass_mk (X : Class) : Class :=
