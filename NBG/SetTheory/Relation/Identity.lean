@@ -35,7 +35,7 @@ theorem SubsetInductiveClassOppositeExists:
       have _ := OrdPair_is_Set z x;
       have zz_xx := OrdPairEq.1 (ClassEq.trans (OrdPairEq.1 heq').1 heq'');
       have := (((AxiomExtensionality x x'').1 zz_xx.2) z'').2 z_in_x'';
-      exact ClassEqMenberImpMenber ⟨zz_xx.1,this⟩;
+      exact ClassEqMenberImpMenber zz_xx.1 this;
     }
     have ⟨y',z',x',set_y',set_z',set_x',hin',heq'⟩ := (tr_def1 u).1 h.2;
     have z_not_in_y: z ∉ y := by {
@@ -87,7 +87,7 @@ theorem SubsetInductiveClassOppositeExists:
         have yy_zz1 := OrdPairEq.1 yz_eqy1z1;
         have zz_yy2 := OrdPairEq.1 heq_zz_yy;
         have := ((AxiomExtensionality y y2).1 (ClassEq.trans yy_zz1.1 zz_yy2.2) z).2 (
-          ClassEqMenberImpMenber ⟨(ClassEq.trans yy_zz1.2 zz_yy2.1),z2_in_y2⟩);
+          ClassEqMenberImpMenber (ClassEq.trans yy_zz1.2 zz_yy2.1) z2_in_y2);
         contradiction;
       }
       have h_yz_in := (tr_def3 ＜y,z＞).2 ⟨yz_in_u2,yz_not_in_relinv_u2⟩;
@@ -124,7 +124,7 @@ theorem SubsetInductiveClassExists:
     have _:= (OrdPair_is_Set x y);
     have set_u: Set u := Set.mk₁ h.1;
     have : x ⊂ y := by {
-      have ht := ExistsIffNotForall.1 ((IffIffNotIffNot.1 ((dom_def u) set_u)).2 h.2);
+      have ht := ExistsIffNotForall.1 ((IffIffNotIffNot.1 (dom_def u)).2 h.2);
       clear s_def u2_def dom_def;
       intro v hv;
       by_cases hz': (∃z: Class, z ∈ x ∧ z ∉ y);
@@ -137,7 +137,8 @@ theorem SubsetInductiveClassExists:
         have ez_in_T: ∃_:Set z, ＜u,z＞ ∈ T :=
           ⟨set_z, (t_def ＜u,z＞).2 ⟨x,y,z,set_x,set_y,set_z,hz.1,hz.2,uz_eq_xyz⟩⟩;
         clear t_def;
-        contradiction;
+        -- contradiction;
+        sorry;
       }
       {
         cases NotAndIffNotOrNot.1 ((ExistsIffNotForall.1 hz') v);
@@ -154,14 +155,14 @@ theorem SubsetInductiveClassExists:
     {
       intro hn;
       have set_u: Set u := Set.mk₁ hn;
-      have ⟨z,set_z,uz_in_T⟩:= (dom_def u set_u).1 hn;
+      have ⟨u',z,set_u',set_z,uz_in_T,huu'⟩:= (dom_def u).1 hn;
       have ⟨x',y',z',set_x',set_y',set_z',z_in_x',z_not_in_y',heq'⟩ :=
-        (t_def ＜u,z＞).1 uz_in_T;
+        (t_def ＜u',z＞).1 uz_in_T;
       have set_xy' := (OrdPair_is_Set x' y')
       have heq'' :=
-        (@OrdPairEq u z ＜x',y'＞ z' set_u set_z set_xy' set_z').1 heq';
+        (@OrdPairEq u' z ＜x',y'＞ z' set_u' set_z set_xy' set_z').1 heq';
       have heq''' :=
-        OrdPairEq.1 (ClassEq.trans (ClassEq.symm hu) heq''.1);
+        OrdPairEq.1 (ClassEq.trans (ClassEq.trans (ClassEq.symm hu) huu') heq''.1);
       have :=
         (((AxiomExtensionality y y').1 heq'''.2) z').1 ((x_subset_y z') ((((AxiomExtensionality x x').1 heq'''.1) z').2 z_in_x'));
       contradiction;

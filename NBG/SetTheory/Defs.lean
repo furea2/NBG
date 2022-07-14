@@ -15,7 +15,7 @@ instance : HasIn Class where
 notation:50 X " ∉ " Y => ¬ X ∈ Y
 
 axiom RewiteClass {p: Class → Prop} {X Y: Class}:
-  ((X ＝ Y) ∧ p X) → p Y
+  ((X ＝ Y) ∧ p Y) → p X
 
 def isSet (X : Class) : Prop := ∃(Y:Class), X ∈ Y
 

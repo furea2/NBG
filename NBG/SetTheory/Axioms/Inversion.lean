@@ -60,7 +60,7 @@ theorem RelIffRelInRelInv (R: Class) [hR: Relation R]:
     intro h;
     rw [rel_inv_inv_def];
     have ⟨x, y, hx, hy, heq⟩ := rel_def z h;
-    have hin := ClassEqMenberImpMenber ⟨ClassEq.symm heq,h⟩;
+    have hin := ClassEqMenberImpMenber (ClassEq.symm heq) h;
     have hin' := (rel_inv_def ＜y, x＞).2 ⟨x,y,hx,hy,hin,ClassEq.refl _⟩;
     exact ⟨y,x,hy,hx,hin',heq⟩;
   }
@@ -69,7 +69,7 @@ theorem RelIffRelInRelInv (R: Class) [hR: Relation R]:
     have ⟨y, x, hy, hx, hin, heq⟩ := ((rel_inv_inv_def z).1 h);
     have ⟨x', y', hx', hy', hin', heq'⟩ := ((rel_inv_def ＜y,x＞).1 hin);
     have heq'' := OrdPairEq.2 ⟨(OrdPairEq.1 heq').2,(OrdPairEq.1 heq').1⟩;
-    exact ClassEqMenberImpMenber ⟨ClassEq.trans heq heq'',hin'⟩;
+    exact ClassEqMenberImpMenber (ClassEq.trans heq heq'') hin';
   }
 }
 
